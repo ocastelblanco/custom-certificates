@@ -3,7 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  ruta_api: 'http://localhost/varios/custom-certificates/',
+  ruta_login: 'http://www.acgcalidadeducacion.com/campus_virtual/login/cert.php'
 };
 
 /*

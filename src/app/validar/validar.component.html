@@ -1,0 +1,78 @@
+<header class="header">
+    <div class="branding">
+        <img src="assets/img/acg_logo.png" alt="">
+        <span class="title">Validador de certificados ACG Calidad</span>
+    </div>
+</header>
+<div class="content-container">
+    <div class="content-area">
+        <div class="clr-row clr-justify-content-center">
+            <div class="clr-col-lg-4 clr-col-md-8 clr-col-sm-10 clr-col-12" *ngIf="!resultado">
+                <div class="card">
+                    <div class="card-header">
+                        Ingrese el número de certificado
+                        <clr-signpost>
+                            <clr-signpost-content *clrIfOpen [clrPosition]="'right-middle'">
+                                <h3>Número del certificado</h3>
+                                <p>En la esquina inferior derecha del certificado</p>
+                                <img class="img-ayuda" src="assets/img/cert.png" alt="">
+                            </clr-signpost-content>
+                        </clr-signpost>
+                    </div>
+                    <div class="card-block">
+                        <clr-alert clrAlertType="warning" [(clrAlertClosed)]="!alerta" [clrAlertSizeSmall]="true">
+                            El número de certificado {{id}} no existe en nuestra base de datos.
+                        </clr-alert>
+                        <form clrForm (ngSubmit)="valida()">
+                            <clr-input-container class="clr-row">
+                                <label class="clr-col-7">Número del certificado</label>
+                                <input (ngModelChange)="alerta = false" type="number" class="clr-col-5" [(ngModel)]="id" clrInput placeholder="ej. 2163" name="id">
+                            </clr-input-container>
+                        </form>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-primary" (click)="valida()" [disabled]="!id">Validar certificado</button>
+                    </div>
+                </div>
+            </div>
+            <div class="clr-col-12" *ngIf="resultado">
+                <div class="card">
+                    <div class="card-header">
+                        <clr-icon shape="check-circle" size="36" class="is-success"></clr-icon>
+                        Certificado validado
+                    </div>
+                    <div class="card-block">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Documento de identidad</th>
+                                    <th>Nombres</th>
+                                    <th>Apellidos</th>
+                                    <th>Curso</th>
+                                    <th>Intensidad</th>
+                                    <th>Fecha</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let res of resultado">
+                                    <td>{{res.id}}</td>
+                                    <td *ngIf="esNumero(res.idnumber)">{{res.idnumber | number}}</td>
+                                    <td *ngIf="!esNumero(res.idnumber)">{{res.idnumber}}</td>
+                                    <td>{{res.firstname}}</td>
+                                    <td>{{res.lastname}}</td>
+                                    <td>{{res.fullname}}</td>
+                                    <td>{{res.intensidad}}</td>
+                                    <td>{{fecha(res.fecha) | date:'MM-yyyy'}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-primary" (click)="reinicia()">Volver</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

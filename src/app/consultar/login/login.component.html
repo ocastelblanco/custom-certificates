@@ -1,0 +1,28 @@
+<div class="clr-row clr-justify-content-center">
+  <clr-spinner *ngIf="cargando">Loading photos</clr-spinner>
+  <div class="clr-col-lg-4 clr-col-md-8 clr-col-sm-10 clr-col-12" *ngIf="!cargando">
+    <div class="card">
+      <div class="card-header">
+        Acceso al módulo de consulta
+      </div>
+      <div class="card-block">
+        <clr-alert clrAlertType="warning" [(clrAlertClosed)]="!alerta">
+          Usuario o contraseña incorrecta. Intente de nuevo
+        </clr-alert>
+        <form clrForm (ngSubmit)="login()">
+          <clr-input-container class="clr-row">
+            <label class="clr-col-3">Usuario:</label>
+            <input (ngModelChange)="alerta = false" type="text" class="clr-col-9" [(ngModel)]="user" clrInput name="user">
+          </clr-input-container>
+          <clr-input-container class="clr-row">
+            <label class="clr-col-3">Contraseña:</label>
+            <input (ngModelChange)="alerta = false" type="password" class="clr-col-9" [(ngModel)]="pass" clrInput name="pass">
+          </clr-input-container>
+        </form>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-primary" (click)="login()" [disabled]="!user || !pass">Ingresar</button>
+      </div>
+    </div>
+  </div>
+</div>

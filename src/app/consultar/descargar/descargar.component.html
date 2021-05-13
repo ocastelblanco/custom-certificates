@@ -1,0 +1,86 @@
+<div class="listado" *ngIf="data && sesion.perfil">
+  <p class="titulo">Certificados disponibles para descargar</p>
+  <p class="instrucciones">Seleccione los certificados que desea descargar y haga clic en DESCARGAR.</p>
+  <div class="usuario" *ngIf="!sesion.perfil.admin">
+    <p class="nombre">
+      Certificados de
+      <strong>{{sesion.perfil.firstname + ' ' + sesion.perfil.lastname}}</strong>
+    </p>
+    <clr-datagrid [(clrDgSelected)]="certSel">
+      <clr-dg-action-bar>
+        <div class="btn-group">
+          <button type="button" class="btn btn-sm btn-primary" *ngIf="certSel.length > 0" (click)="pdf()">
+            <clr-icon shape="download"></clr-icon> Descargar
+          </button>
+        </div>
+      </clr-dg-action-bar>
+      <clr-dg-column [clrDgField]="'id'"># CERT.</clr-dg-column>
+      <clr-dg-column [clrDgField]="'coursename'">Curso</clr-dg-column>
+      <clr-dg-column [clrDgField]="'intensidad'">Intensidad</clr-dg-column>
+      <clr-dg-column [clrDgField]="'fecha'">Fecha</clr-dg-column>
+      <clr-dg-row *clrDgItems="let cert of data" [clrDgItem]="cert">
+        <clr-dg-cell>CV-{{cert.id}}</clr-dg-cell>
+        <clr-dg-cell>{{cert.coursename}}</clr-dg-cell>
+        <clr-dg-cell>{{cert.intensidad}}</clr-dg-cell>
+        <clr-dg-cell>{{fecha(cert.fecha) | date:'MM-yyyy'}}</clr-dg-cell>
+      </clr-dg-row>
+      <clr-dg-footer>{{data.length}} certificados disponibles</clr-dg-footer>
+    </clr-datagrid>
+  </div>
+  <div class="admin" *ngIf="sesion.perfil.admin">
+    <clr-datagrid [(clrDgSelected)]="certSel">
+      <clr-dg-action-bar>
+        <div class="btn-group">
+          <button type="button" class="btn btn-sm btn-primary" *ngIf="certSel.length > 0" (click)="pdf()">
+            <clr-icon shape="download"></clr-icon> Descargar
+          </button>
+        </div>
+      </clr-dg-action-bar>
+      <clr-dg-column [clrDgField]="'id'"># CERT.</clr-dg-column>
+      <clr-dg-column [clrDgField]="'firstname'">Nombres</clr-dg-column>
+      <clr-dg-column [clrDgField]="'lastname'">Apellidos</clr-dg-column>
+      <clr-dg-column [clrDgField]="'idnumber'"># Identidad</clr-dg-column>
+      <clr-dg-column [clrDgField]="'institution'">Institución</clr-dg-column>
+      <clr-dg-column [clrDgField]="'city'">Ciudad</clr-dg-column>
+      <clr-dg-column [clrDgField]="'country'">País</clr-dg-column>
+      <clr-dg-column [clrDgField]="'coursename'">Curso</clr-dg-column>
+      <clr-dg-column [clrDgField]="'intensidad'">Intensidad</clr-dg-column>
+      <clr-dg-column [clrDgField]="'fecha'">Generado</clr-dg-column>
+      <clr-dg-column [clrDgField]="'notificacion'">Notificado</clr-dg-column>
+      <clr-dg-row *clrDgItems="let cert of data" [clrDgItem]="cert">
+        <clr-dg-cell>CV-{{cert.id}}</clr-dg-cell>
+        <clr-dg-cell>{{cert.firstname}}</clr-dg-cell>
+        <clr-dg-cell>{{cert.lastname}}</clr-dg-cell>
+        <clr-dg-cell>{{cert.idnumber}}</clr-dg-cell>
+        <clr-dg-cell>{{cert.institution}}</clr-dg-cell>
+        <clr-dg-cell>{{cert.city}}</clr-dg-cell>
+        <clr-dg-cell>{{cert.country}}</clr-dg-cell>
+        <clr-dg-cell>{{cert.coursename}}</clr-dg-cell>
+        <clr-dg-cell>{{cert.intensidad}}</clr-dg-cell>
+        <clr-dg-cell>{{fecha(cert.fecha) | date:'MM-yyyy'}}</clr-dg-cell>
+        <clr-dg-cell *ngIf="fecha(cert.notificacion) > 0">{{fecha(cert.notificacion) | date:'MM-yyyy'}}</clr-dg-cell>
+        <clr-dg-cell *ngIf="fecha(cert.notificacion) === 0">SIN NOTIFICAR</clr-dg-cell>
+      </clr-dg-row>
+      <clr-dg-footer>
+        <clr-dg-pagination #pagination [clrDgPageSize]="10">
+          <clr-dg-page-size [clrPageSizeOptions]="[10,20,50,100]">Registros por página</clr-dg-page-size>
+          {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}} de {{pagination.totalItems}} registros
+        </clr-dg-pagination>
+      </clr-dg-footer>
+    </clr-datagrid>
+  </div>
+  <clr-alert clrAlertType="warning">
+    <clr-alert-item>
+      Si descarga más de 3 certificados a la vez es posible que el proceso tome mucho tiempo.
+    </clr-alert-item>
+  </clr-alert>
+</div>
+<clr-modal [(clrModalOpen)]="abreModal" [clrModalClosable]="false">
+  <h3 class="modal-title">Generando certificados</h3>
+  <div class="modal-body">
+    <p>Espere mientras se generan los certificados y se comprimen en un ZIP descargable.</p>
+    <div class="progress loop">
+      <progress></progress>
+    </div>
+  </div>
+</clr-modal>
