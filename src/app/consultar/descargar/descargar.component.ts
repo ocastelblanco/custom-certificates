@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from 'src/app/servicios/api.service';
-import { SesionService, User } from 'src/app/servicios/sesion.service';
-import { Certificado, CrearPDFService } from 'src/app/servicios/crear-PDF.service';
+import { SesionService } from 'src/app/servicios/sesion.service';
+import { Certificado, PdfService } from 'src/app/servicios/pdf.service';
 import { FileSaverService } from 'ngx-filesaver';
 import { jsPDF } from 'jspdf';
 import * as JSZip from 'jszip';
@@ -18,7 +18,7 @@ export class DescargarComponent implements OnInit {
   constructor(
     public sesion: SesionService,
     private api: ApiService,
-    private crearPDF: CrearPDFService,
+    private pdf: PdfService,
     private fs: FileSaverService
   ) { }
   ngOnInit(): void {
@@ -37,24 +37,24 @@ export class DescargarComponent implements OnInit {
     }
     return salida;
   }
-  pdf() {
+  crearPdf() {
     this.abreModal = true;
     const zip: JSZip = new JSZip();
     this.certSel.forEach(cert => {
-      const pdf: jsPDF = this.crearPDF.get(cert);
+      const pdf: jsPDF = this.pdf.get(cert);
       const date: number = parseInt(cert.fecha) * 1000;
-      const fecha: string = this.crearPDF.dosDig(new Date(date).getMonth()) + '-' + new Date(date).getFullYear();
+      const fecha: string = this.pdf.dosDig(new Date(date).getMonth()) + '-' + new Date(date).getFullYear();
       const nombrePDF: string = cert.id + '-' + cert.coursename + '-' + cert.idnumber + '-' + fecha + '.pdf';
       zip.file(nombrePDF, pdf.output('blob'));
     });
     let hoy: Date = new Date(Date.now());
     let nomZIP: string = 'Cert_ACG_';
     nomZIP += hoy.getFullYear();
-    nomZIP += this.crearPDF.dosDig(hoy.getMonth() + 1);
-    nomZIP += this.crearPDF.dosDig(hoy.getDate());
-    nomZIP += this.crearPDF.dosDig(hoy.getHours());
-    nomZIP += this.crearPDF.dosDig(hoy.getMinutes());
-    nomZIP += this.crearPDF.dosDig(hoy.getSeconds());
+    nomZIP += this.pdf.dosDig(hoy.getMonth() + 1);
+    nomZIP += this.pdf.dosDig(hoy.getDate());
+    nomZIP += this.pdf.dosDig(hoy.getHours());
+    nomZIP += this.pdf.dosDig(hoy.getMinutes());
+    nomZIP += this.pdf.dosDig(hoy.getSeconds());
     nomZIP += '.zip';
     zip.generateAsync({ type: 'blob' }).then(res => {
       this.fs.save(res, nomZIP);

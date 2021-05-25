@@ -1,5 +1,5 @@
 <?php
-require("config.php");
+require("../config/config.php");
 $id = $_GET["id"];
 $salida = $database->select(
   $tablas["cert"],

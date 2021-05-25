@@ -1,18 +1,5 @@
 <?php
-require("config.php");
-$nombresCursos = array(
-  "ACG Calidad - Campus Virtual" => "ACG CALIDAD",
-  "EM_calidad_analitica" => "GESTIÓN DE LA CALIDAD",
-  "EM_paciente_seguro" => "PACIENTE SEGURO",
-  "EM_gestion_riesgo" => "GESTIÓN DEL RIESGO",
-  "EM_seis_sigma" => "SEIS SIGMA",
-  "EM_bioseguridad-covid19" => "BIOSEGURIDAD COVID-19",
-  "bioseguridad-covid19" => "BIOSEGURIDAD COVID-19",
-  "EMI_diplo_calidad" => "DIPLOMADO DE CALIDAD",
-  "EMI_diplo_calidad_2020-11-05" => "DIPLOMADO DE CALIDAD NOV 2020",
-  "EMI_diplo_calidad_2021-02-22" => "DIPLOMADO DE CALIDAD FEB 2021",
-  "SEM_Diplom_Calidad" => "Semilla DIPLOMADO DE CALIDAD"
-);
+require("../config/config.php");
 $where_id = array("userid[>]" => 0);
 if (isset($_GET["id"])) $where_id = array("userid" => $_GET["id"]);
 $resultado = $database->select(

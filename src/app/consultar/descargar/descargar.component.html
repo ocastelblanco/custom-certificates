@@ -8,8 +8,8 @@
     </p>
     <clr-datagrid [(clrDgSelected)]="certSel">
       <clr-dg-action-bar>
-        <div class="btn-group">
-          <button type="button" class="btn btn-sm btn-primary" *ngIf="certSel.length > 0" (click)="pdf()">
+        <div class="btn-group btn-secundary btn-sm">
+          <button type="button" class="btn" *ngIf="certSel.length > 0" (click)="crearPdf()">
             <clr-icon shape="download"></clr-icon> Descargar
           </button>
         </div>
@@ -30,8 +30,8 @@
   <div class="admin" *ngIf="sesion.perfil.admin">
     <clr-datagrid [(clrDgSelected)]="certSel">
       <clr-dg-action-bar>
-        <div class="btn-group">
-          <button type="button" class="btn btn-sm btn-primary" *ngIf="certSel.length > 0" (click)="pdf()">
+        <div class="btn-group btn-secundary btn-sm">
+          <button type="button" class="btn" *ngIf="certSel.length > 0" (click)="crearPdf()">
             <clr-icon shape="download"></clr-icon> Descargar
           </button>
         </div>

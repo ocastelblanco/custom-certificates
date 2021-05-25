@@ -1,1 +1,39 @@
-<p>generar works!</p>
+<p class="titulo">Calificaciones</p>
+<p class="instrucciones">Calificaciones de usuarios que no han sido certificados ni notificados aún.</p>
+<clr-datagrid [(clrDgSelected)]="calSel">
+  <clr-dg-action-bar>
+    <div class="btn-group btn-secundary btn-sm">
+      <button type="button" class="btn" (click)="exportar(data)">
+        <clr-icon shape="file"></clr-icon> Exportar todos a Excel
+      </button>
+      <button type="button" class="btn" *ngIf="calSel.length > 0" (click)="exportar(calSel)">
+        <clr-icon shape="checkbox-list"></clr-icon> Exportar seleccionados a Excel
+      </button>
+      <button type="button" class="btn" *ngIf="calSel.length > 0">
+        <clr-icon shape="cog"></clr-icon> Generar certificados y notificar
+      </button>
+    </div>
+  </clr-dg-action-bar>
+  <clr-dg-column [clrDgField]="'nombres'">{{nombres.nombres}}</clr-dg-column>
+  <clr-dg-column [clrDgField]="'apellidos'">{{nombres.apellidos}}</clr-dg-column>
+  <clr-dg-column [clrDgField]="'email'">{{nombres.email}}</clr-dg-column>
+  <clr-dg-column [clrDgField]="'identificacion'">{{nombres.identificacion}}</clr-dg-column>
+  <clr-dg-column [clrDgField]="'coursename'">{{nombres.coursename}}</clr-dg-column>
+  <clr-dg-column [clrDgField]="'notaFinal'" [clrDgColType]="'number'">{{nombres.notaFinal}}</clr-dg-column>
+  <clr-dg-column [clrDgField]="'fecha'">{{nombres.fecha}}</clr-dg-column>
+  <clr-dg-row *clrDgItems="let cal of data" [clrDgItem]="cal">
+    <clr-dg-cell>{{cal.nombres}}</clr-dg-cell>
+    <clr-dg-cell>{{cal.apellidos}}</clr-dg-cell>
+    <clr-dg-cell>{{cal.email}}</clr-dg-cell>
+    <clr-dg-cell>{{cal.identificacion}}</clr-dg-cell>
+    <clr-dg-cell>{{cal.coursename}}</clr-dg-cell>
+    <clr-dg-cell class="right">{{cal.notaFinal}}</clr-dg-cell>
+    <clr-dg-cell class="right">{{cal.fecha | date:'yyyy-MM-dd'}}</clr-dg-cell>
+  </clr-dg-row>
+  <clr-dg-footer>
+    <clr-dg-pagination #pagination [clrDgPageSize]="10">
+      <clr-dg-page-size [clrPageSizeOptions]="[10,20,50,100]">Registros por página</clr-dg-page-size>
+      {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}} de {{pagination.totalItems}} registros
+    </clr-dg-pagination>
+  </clr-dg-footer>
+</clr-datagrid>

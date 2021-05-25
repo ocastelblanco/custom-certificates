@@ -1,0 +1,8 @@
+{
+    "require": {
+        "catfan/medoo": "^2.0",
+        "phpmailer/phpmailer": "^6.4",
+        "league/oauth2-client": "^2.6",
+        "league/oauth2-google": "^4.0"
+    }
+}
