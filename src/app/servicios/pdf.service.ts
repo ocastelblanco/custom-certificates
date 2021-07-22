@@ -17,6 +17,7 @@ export interface Certificado {
   fullname: string;
   shortname: string;
   coursename: string;
+  email: string;
 }
 
 @Injectable({

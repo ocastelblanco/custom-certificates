@@ -19,11 +19,60 @@ export interface Calificaciones extends Nombres {
   shortname: string;
   courseid: string;
 }
+export interface Notificacion {
+  nombre: string;
+  correo: string;
+  curso: string;
+  asunto?: string;
+  contenido?: string;
+  altbody?: string;
+}
+export interface ErrorEnvio {
+  userid: string;
+  nombre: string;
+  email: string;
+  error: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
+  private contHTML: string = `
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset="utf-8">
+    </head>
+    <body>
+      <p>Estimado(a) Doctor(a) <strong>{{nombre}}</strong>:</p>
+      <p>De parte del Grupo de Capacitación de ACG Calidad le queremos agradecer su participación en nuestro curso virtual <strong>{{curso}}</strong>.</p>
+      <p>Desde este vínculo, ingresando con el mismo usuario y contraseña que ha usa para ingresar a nuestros cursos, podrá descargar el certificado en formato PDF:</p>
+      <p><a href="http://www.acgcalidadeducacion.com/certificados/consultar/" target="_blank">http://www.acgcalidadeducacion.com/certificados/consultar/</a></p>
+      <p>Atentamente,</p>
+      <br>
+      <p>
+        --
+        <br>
+        <strong>Grupo Capacitación ACG</strong>
+      </p>
+    </body>
+  </html>
+  `;
+  private contAlt: string = `
+  Estimado(a) Doctor(a) {{nombre}}:
+
+  De parte del Grupo de Capacitación de ACG Calidad le queremos agradecer su participación en nuestro curso virtual {{curso}}.
+
+  Desde este vínculo, ingresando con el mismo usuario y contraseña que ha usa para ingresar a nuestros cursos, podrá descargar el certificado en formato PDF:
+  http://www.acgcalidadeducacion.com/certificados/consultar/
+
+  Atentamente,
+
+  --
+  Grupo Capacitación ACG
+  `;
+  private asunto: string = 'Certificado de curso virtual en ACG Calidad';
   constructor(private http: HttpClient) { }
   list(id: string): Observable<any> {
     return this.http.get(environment.ruta_api + 'assets/api/list.php?id=' + id, { responseType: 'json' });
@@ -32,8 +81,27 @@ export class ApiService {
     const get: string = id ? '?id=' + id : '';
     return this.http.get(environment.ruta_api + 'assets/api/getCert.php' + get, { responseType: 'json' });
   }
-  listUsers(get: any[] = []): Observable<any> {
-    const getVar: string = get.length > 0 ? '?' + get.map(e => Object.keys(e) + '=' + Object.values(e)).join('&') : '';
-    return this.http.get(environment.ruta_api + 'assets/api/listUsers.php', { responseType: 'json' });
+  listUsers(id: string | null = null): Observable<any> {
+    const get: string = id ? '?id=' + id : '';
+    return this.http.get(environment.ruta_api + 'assets/api/listUsers.php' + get, { responseType: 'json' });
+  }
+  sendMail(get: Notificacion): Observable<any> {
+    const contenido: string = this.contHTML.replace(/\{\{nombre\}\}/g, get.nombre).replace(/\{\{curso\}\}/g, get.curso);
+    const altbody: string = this.contAlt.replace(/\{\{nombre\}\}/g, get.nombre).replace(/\{\{curso\}\}/g, get.curso);
+    const data: FormData = new FormData();
+    data.set('nombre', get.nombre);
+    data.append('correo', get.correo);
+    data.append('asunto', get.asunto ? get.asunto : this.asunto);
+    data.append('contenido', get.contenido ? get.contenido : contenido);
+    data.append('altbody', get.altbody ? get.altbody : altbody);
+    return this.http.post(environment.ruta_api + 'assets/api/sendMail.php', data, { responseType: 'json' });
+  }
+  postCert(data: any): Observable<any> {
+    const postData: FormData = new FormData();
+    Object.keys(data).forEach((k, i) => postData.append(k, String(Object.values(data)[i])));
+    return this.http.post(environment.ruta_api + 'assets/api/postCert.php', postData, { responseType: 'json' });
+  }
+  postNot(id: string): Observable<any> {
+    return this.http.get(environment.ruta_api + 'assets/api/postNot.php?id=' + id, { responseType: 'json' });
   }
 }

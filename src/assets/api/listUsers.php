@@ -19,15 +19,20 @@ $query .= "JOIN mo_grade_grades AS gg ON gg.userid = u.id ";
 $query .= "JOIN mo_grade_items AS gi ON gi.id = gg.itemid ";
 $query .= "WHERE gi.courseid = c.id AND gi.itemtype = 'course' ";
 if (isset($_GET["id"])) $query .= "AND u.id = " . $_GET["id"];
+// Se obtiene el listado completo de todos los participantes con calificación
 $resultado = $database->query($query)->fetchAll();
+// Se depura el listado de registros con campos vacíos o repetidos 
 foreach ($resultado as $num => $res) {
   foreach ($res as $clave => $valor) {
     if (false === array_search($clave, $nombres) || $clave === 0) unset($resultado[$num][$clave]);
   }
+  // Se añade el "nombre común" del curso al listado
   $resultado[$num]["coursename"] = $nombresCursos[$res["shortname"]];
 }
+// Se obtiene el listado de Certificados ya generados
 $cert = $database->select($tablas["cert"], ["id", "userid", "courseid"]);
 $salida = array();
+// Se genera un listado final donde SOLO están los participantes sin certificado en un curso dado.
 foreach ($resultado as $el) {
   $coinc = false;
   foreach ($cert as $ce) {
@@ -36,4 +41,3 @@ foreach ($resultado as $el) {
   !$coinc ? array_push($salida, $el) : null;
 }
 print_r(json_encode($salida));
-//print_r(json_encode($resultado));

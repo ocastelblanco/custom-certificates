@@ -17,6 +17,7 @@ $resultado = $database->select(
     $tablas["cert"] . ".notificacion",
     $tablas["user"] . ".firstname",
     $tablas["user"] . ".lastname",
+    $tablas["user"] . ".email",
     $tablas["user"] . ".idnumber",
     $tablas["user"] . ".institution",
     $tablas["user"] . ".city",

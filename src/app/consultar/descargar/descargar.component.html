@@ -1,7 +1,26 @@
+<div *ngIf="errores.length > 0">
+  <clr-alert clrAlertType="danger" *ngFor="let err of errores">
+    <clr-alert-item>
+      <strong>ERROR EN LA NOTIFICACIÓN:</strong>
+      {{err | json}}
+    </clr-alert-item>
+  </clr-alert>
+</div>
+<div *ngIf="notificados > 0">
+  <clr-alert clrAlertType="success">
+    <clr-alert-item>Han sido notificadas {{notificados}} personas correctamente.</clr-alert-item>
+  </clr-alert>
+</div>
 <div class="listado" *ngIf="data && sesion.perfil">
   <p class="titulo">Certificados disponibles para descargar</p>
   <p class="instrucciones">Seleccione los certificados que desea descargar y haga clic en DESCARGAR.</p>
-  <div class="usuario" *ngIf="!sesion.perfil.admin">
+  <clr-alert clrAlertType="warning">
+    <clr-alert-item>
+      Si descarga más de 3 certificados a la vez es posible que el proceso tome mucho tiempo.
+    </clr-alert-item>
+  </clr-alert>
+  <div class="usuario"
+       *ngIf="!sesion.perfil.admin">
     <p class="nombre">
       Certificados de
       <strong>{{sesion.perfil.firstname + ' ' + sesion.perfil.lastname}}</strong>
@@ -9,7 +28,10 @@
     <clr-datagrid [(clrDgSelected)]="certSel">
       <clr-dg-action-bar>
         <div class="btn-group btn-secundary btn-sm">
-          <button type="button" class="btn" *ngIf="certSel.length > 0" (click)="crearPdf()">
+          <button type="button"
+                  class="btn"
+                  *ngIf="certSel.length > 0"
+                  (click)="crearPdf()">
             <clr-icon shape="download"></clr-icon> Descargar
           </button>
         </div>
@@ -18,7 +40,8 @@
       <clr-dg-column [clrDgField]="'coursename'">Curso</clr-dg-column>
       <clr-dg-column [clrDgField]="'intensidad'">Intensidad</clr-dg-column>
       <clr-dg-column [clrDgField]="'fecha'">Fecha</clr-dg-column>
-      <clr-dg-row *clrDgItems="let cert of data" [clrDgItem]="cert">
+      <clr-dg-row *clrDgItems="let cert of data"
+                  [clrDgItem]="cert">
         <clr-dg-cell>CV-{{cert.id}}</clr-dg-cell>
         <clr-dg-cell>{{cert.coursename}}</clr-dg-cell>
         <clr-dg-cell>{{cert.intensidad}}</clr-dg-cell>
@@ -31,8 +54,17 @@
     <clr-datagrid [(clrDgSelected)]="certSel">
       <clr-dg-action-bar>
         <div class="btn-group btn-secundary btn-sm">
-          <button type="button" class="btn" *ngIf="certSel.length > 0" (click)="crearPdf()">
+          <button type="button"
+                  class="btn"
+                  *ngIf="certSel.length > 0"
+                  (click)="crearPdf()">
             <clr-icon shape="download"></clr-icon> Descargar
+          </button>
+          <button type="button"
+                  class="btn"
+                  *ngIf="certSel.length > 0"
+                  (click)="modalNotificar = true">
+            <clr-icon shape="envelope"></clr-icon> Volver a notificar
           </button>
         </div>
       </clr-dg-action-bar>
@@ -62,18 +94,14 @@
         <clr-dg-cell *ngIf="fecha(cert.notificacion) === 0">SIN NOTIFICAR</clr-dg-cell>
       </clr-dg-row>
       <clr-dg-footer>
-        <clr-dg-pagination #pagination [clrDgPageSize]="10">
+        <clr-dg-pagination #pagination
+                           [clrDgPageSize]="10">
           <clr-dg-page-size [clrPageSizeOptions]="[10,20,50,100]">Registros por página</clr-dg-page-size>
           {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}} de {{pagination.totalItems}} registros
         </clr-dg-pagination>
       </clr-dg-footer>
     </clr-datagrid>
   </div>
-  <clr-alert clrAlertType="warning">
-    <clr-alert-item>
-      Si descarga más de 3 certificados a la vez es posible que el proceso tome mucho tiempo.
-    </clr-alert-item>
-  </clr-alert>
 </div>
 <clr-modal [(clrModalOpen)]="abreModal" [clrModalClosable]="false">
   <h3 class="modal-title">Generando certificados</h3>
@@ -82,5 +110,41 @@
     <div class="progress loop">
       <progress></progress>
     </div>
+  </div>
+</clr-modal>
+<clr-modal [(clrModalOpen)]="modalNotificar" [clrModalClosable]="!notificando">
+  <h3 class="modal-title">Notificar sobre certificado</h3>
+  <div class="modal-body" *ngIf="!notificando">
+    <p>
+      A continuación se enviará un email a cada persona seleccionada para notificarle sobre el vínculo desde donde puede descargar el certificado.
+    </p>
+    <p>
+      Haga clic en ACEPTAR para iniciar el proceso de notificación de {{certSel.length}} personas.
+    </p>
+  </div>
+  <div class="modal-body" *ngIf="notificando && porNotif < 100">
+    <p>Notificando a {{numNotif}} personas de {{certSel.length}}.</p>
+    <clr-progress-bar [clrValue]="porNotif"></clr-progress-bar>
+  </div>
+  <div class="modal-body" *ngIf="notificando && porNotif === 100 && errores.length < 1">
+    <clr-alert clrAlertType="success" [clrAlertClosable]="false">
+      <clr-alert-item>Se han enviado todos los correos correctamente.</clr-alert-item>
+    </clr-alert>
+  </div>
+  <div class="modal-body" *ngIf="notificando && porNotif === 100 && errores.length > 0">
+    <clr-alert clrAlertType="danger" [clrAlertClosable]="false">
+      <clr-alert-item>
+        Ha ocurrido uno o más errores de envío. Verifique las alertas al inicio de la página y repórtelo al administrador.
+      </clr-alert-item>
+    </clr-alert>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline" (click)="cerrarModal()" *ngIf="!notificando">
+      Cancelar
+    </button>
+    <button type="button" class="btn btn-primary" (click)="cerrarModal()" *ngIf="notificando && porNotif === 100">
+      Cerrar
+    </button>
+    <button type="button" class="btn btn-primary" (click)="notificar()" *ngIf="!notificando">Aceptar</button>
   </div>
 </clr-modal>

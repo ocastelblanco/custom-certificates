@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ApiService, Calificaciones, Nombres } from 'src/app/servicios/api.service';
+import { ApiService, Calificaciones, ErrorEnvio, Nombres, Notificacion } from 'src/app/servicios/api.service';
 import { ExcelService } from 'src/app/servicios/excel.service';
 import { PdfService } from 'src/app/servicios/pdf.service';
+import { threadId } from 'worker_threads';
 
 @Component({
   selector: 'app-generar',
@@ -20,8 +21,20 @@ export class GenerarComponent implements OnInit {
     notaFinal: 'Nota',
     fecha: 'Última fecha'
   };
+  modalNotificar: boolean = false;
+  notificando: boolean = false;
+  numNotif: number = 0;
+  porNotif: number = 0;
+  errores: ErrorEnvio[] = [];
+  generados: number = 0;
+  notificados: number = 0;
   constructor(private api: ApiService, private excel: ExcelService, private pdf: PdfService) { }
   ngOnInit(): void {
+    this.generaData();
+  }
+  generaData(): void {
+    this.data = [];
+    console.log('Esta cargando la lista de', this.data);
     this.api.listUsers().subscribe(c => this.data = c);
   }
   exportar(data: Calificaciones[]): void {
@@ -46,5 +59,44 @@ export class GenerarComponent implements OnInit {
     nomExcel += this.pdf.dosDig(hoy.getMinutes());
     nomExcel += this.pdf.dosDig(hoy.getSeconds());
     this.excel.exportAsExcelFile(salida, nomExcel, true);
+  }
+  notificar(num: number = 0) {
+    this.notificando = true;
+    const cert: Calificaciones = this.calSel[num];
+    const notificacion: Notificacion = {
+      nombre: cert.nombres + ' ' + cert.apellidos,
+      curso: cert.fullname,
+      correo: cert.email
+    };
+    this.api.postCert(cert).subscribe(res => {
+      if (res.error) console.log(res);
+      const certid: string = res.id;
+      this.generados++;
+      this.api.sendMail(notificacion).subscribe(r => {
+        if (r.error) {
+          this.errores.push({
+            userid: cert.userid,
+            nombre: notificacion.nombre,
+            email: cert.email,
+            error: r.error
+          });
+        }
+        this.api.postNot(certid).subscribe(n => this.notificados++);
+        num++;
+        this.numNotif = num;
+        this.porNotif = Math.ceil(num / this.calSel.length * 100);
+        window.setTimeout(() => {
+          num < this.calSel.length ? this.notificar(num) : null;
+        }, 500);
+      });
+    });
+  }
+  cerrarModal(): void {
+    this.generaData();
+    this.modalNotificar = false;
+    this.notificando = false;
+    this.calSel = [];
+    this.numNotif = 0;
+    this.porNotif = 0;
   }
 }

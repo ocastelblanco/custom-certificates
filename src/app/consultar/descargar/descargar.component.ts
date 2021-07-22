@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ApiService } from 'src/app/servicios/api.service';
+import { ApiService, Notificacion, ErrorEnvio } from 'src/app/servicios/api.service';
 import { SesionService } from 'src/app/servicios/sesion.service';
 import { Certificado, PdfService } from 'src/app/servicios/pdf.service';
 import { FileSaverService } from 'ngx-filesaver';
@@ -15,6 +15,12 @@ export class DescargarComponent implements OnInit {
   data!: Certificado[];
   certSel: Certificado[] = [];
   abreModal: boolean = false;
+  modalNotificar: boolean = false;
+  notificando: boolean = false;
+  numNotif: number = 0;
+  porNotif: number = 0;
+  errores: ErrorEnvio[] = [];
+  notificados: number = 0;
   constructor(
     public sesion: SesionService,
     private api: ApiService,
@@ -22,6 +28,10 @@ export class DescargarComponent implements OnInit {
     private fs: FileSaverService
   ) { }
   ngOnInit(): void {
+    this.generaData();
+  }
+  generaData(): void {
+    this.data = [];
     let id: string | null = null;
     if (this.sesion.perfil) {
       id = this.sesion.perfil.admin ? null : this.sesion.perfil.id;
@@ -60,5 +70,38 @@ export class DescargarComponent implements OnInit {
       this.fs.save(res, nomZIP);
       this.abreModal = false;
     });
+  }
+  notificar(num: number = 0): void {
+    this.notificando = true;
+    const cert: Certificado = this.certSel[num];
+    const notificacion: Notificacion = {
+      nombre: cert.firstname + ' ' + cert.lastname,
+      curso: cert.fullname,
+      correo: cert.email
+    };
+    // Envía emails
+    this.api.sendMail(notificacion).subscribe(r => {
+      if (r.error) {
+        this.errores.push({
+          userid: cert.userid,
+          nombre: notificacion.nombre,
+          email: cert.email,
+          error: r.error
+        });
+      }
+      this.api.postNot(cert.id).subscribe(n => this.notificados++);
+      num++;
+      this.numNotif = num;
+      this.porNotif = Math.ceil(num / this.certSel.length * 100);
+      window.setTimeout(() => num < this.certSel.length ? this.notificar(num) : null, 500);
+    });
+  }
+  cerrarModal(): void {
+    this.generaData();
+    this.modalNotificar = false;
+    this.notificando = false;
+    this.certSel = [];
+    this.numNotif = 0;
+    this.porNotif = 0;
   }
 }
