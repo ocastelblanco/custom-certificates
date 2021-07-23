@@ -12,12 +12,12 @@ export class ConsultarComponent implements OnInit {
   constructor(private sesion: SesionService, private route: Router) { }
   ngOnInit(): void {
     /* */
-    this.sesion.login('ocastelblanco', '4q#ReusgBt8Quv&');
+    //this.sesion.login('ocastelblanco', '4q#ReusgBt8Quv&');
     //this.sesion.login('1018454250', 'afigueroar');
     /* */
     this.sesion.sesion().subscribe(s => {
       this.sesionActiva = s;
-      this.sesionActiva ? this.route.navigateByUrl('/consultar/descargar') : null;
+      if (this.sesionActiva) this.route.navigateByUrl('/consultar/descargar');
     });
   }
   logout() {

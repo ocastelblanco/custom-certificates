@@ -20,13 +20,15 @@ export interface User {
   providedIn: 'root'
 })
 export class SesionService {
-  private sesionActiva: BehaviorSubject<User | null> = new BehaviorSubject<User | null>(null);
+  private sesionActiva: BehaviorSubject<any | null> = new BehaviorSubject<User | null>(null);
   public perfil!: User | null;
   constructor(private http: HttpClient) { }
   sesion(): BehaviorSubject<User | null> {
-    this.http.get(environment.ruta_api + 'assets/api/sesion.php', { responseType: 'json' }).subscribe(s =>
-      s ? this.fillPerfil(s) : this.sesionActiva.next(null)
-    );
+    //this.http.get(environment.ruta_api + 'assets/api/sesion.php', { responseType: 'json' }).subscribe(s =>
+    //s ? this.fillPerfil(s) : this.sesionActiva.next(null)
+    this.http.get(environment.ruta_login, { responseType: 'json' }).subscribe(s => {
+      this.sesionActiva.next(s);
+    });
     return this.sesionActiva;
   }
   login(user: string, pass: string): Observable<any> {
@@ -34,14 +36,15 @@ export class SesionService {
     data.set('user', user);
     data.append('pass', pass);
     const salida: Observable<any> = this.http.post(environment.ruta_login, data, { responseType: 'json' });
-    salida.subscribe(p => this.listAdmin().subscribe(a => (p && a) ? this.fillPerfil(p, a) : null));
+    //salida.subscribe(p => this.listAdmin().subscribe(a => (p && a) ? this.fillPerfil(p, a) : null));
+    salida.subscribe(p => this.sesionActiva.next(p));
     return salida;
   }
   logout() {
-    this.http.get(environment.ruta_api + 'assets/api/sesion.php?logout=1', { responseType: 'json' }).subscribe(s =>
-      !s ? this.sesionActiva.next(null) : null
-    )
+    //this.http.get(environment.ruta_api + 'assets/api/sesion.php?logout=1', { responseType: 'json' }).subscribe(s =>
+    this.http.get(environment.ruta_login + '?logout=1', { responseType: 'json' }).subscribe(s => this.sesionActiva.next(s));
   }
+  /*
   private listAdmin(): Observable<any> {
     return this.http.get(environment.ruta_api + 'assets/api/listAdmin.php', { responseType: 'json' });
   }
@@ -64,4 +67,5 @@ export class SesionService {
       this.sesionActiva.next(this.perfil);
     });
   }
+  */
 }

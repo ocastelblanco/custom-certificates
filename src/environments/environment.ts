@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   ruta_api: 'http://localhost/varios/custom-certificates/',
-  ruta_login: 'http://www.acgcalidadeducacion.com/campus_virtual/login/cert.php'
+  ruta_login: 'http://acgcalidadeducacion.com/campus_virtual/login/ses.php'
 };
 
 /*
