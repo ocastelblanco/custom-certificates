@@ -9,7 +9,7 @@
 
 # dependencies
 /node_modules
-/src/assets/lib/vendor
+/src/assets/lib/vendor/*
 
 # profiling files
 chrome-profiler-events*.json
