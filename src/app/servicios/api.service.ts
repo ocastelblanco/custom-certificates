@@ -12,7 +12,6 @@ export interface Nombres {
   notaFinal: string;
   fecha: string;
 }
-
 export interface Calificaciones extends Nombres {
   userid: string;
   fullname: string;
@@ -33,7 +32,6 @@ export interface ErrorEnvio {
   email: string;
   error: string;
 }
-
 @Injectable({
   providedIn: 'root'
 })
@@ -47,8 +45,8 @@ export class ApiService {
     <body>
       <p>Estimado(a) Doctor(a) <strong>{{nombre}}</strong>:</p>
       <p>De parte del Grupo de Capacitación de ACG Calidad le queremos agradecer su participación en nuestro curso virtual <strong>{{curso}}</strong>.</p>
-      <p>Desde este vínculo, ingresando con el mismo usuario y contraseña que ha usa para ingresar a nuestros cursos, podrá descargar el certificado en formato PDF:</p>
-      <p><a href="http://www.acgcalidadeducacion.com/certificados/consultar/" target="_blank">http://www.acgcalidadeducacion.com/certificados/consultar/</a></p>
+      <p>Ingrese a <a href="http://www.acgcalidadeducacion.com/" target="_blank">nuestro Campus Virtual</a> (con el mismo usuario y contraseña de siempre) y haga clic sobre el vínculo <strong>OBTENER CERTIFICADO</strong> que se encuentra al inicio de la página principal.</p>
+      <p>Si tiene alguna duda, puede consultar <a href="https://youtu.be/Gq-UkAvsFOo" target="_blank">nuestro instructivo en video</a>.</p>
       <p>Atentamente,</p>
       <br>
       <p>
@@ -64,8 +62,9 @@ export class ApiService {
 
   De parte del Grupo de Capacitación de ACG Calidad le queremos agradecer su participación en nuestro curso virtual {{curso}}.
 
-  Desde este vínculo, ingresando con el mismo usuario y contraseña que ha usa para ingresar a nuestros cursos, podrá descargar el certificado en formato PDF:
-  http://www.acgcalidadeducacion.com/certificados/consultar/
+  Ingrese a nuestro Campus Virtual con el mismo usuario y contraseña de siempre, http://www.acgcalidadeducacion.com/, y haga clic sobre el vínculo OBTENER CERTIFICADO que se encuentra al inicio de la página principal.
+
+  Si tiene alguna duda, puede consultar nuestro instructivo en video https://youtu.be/Gq-UkAvsFOo.
 
   Atentamente,
 

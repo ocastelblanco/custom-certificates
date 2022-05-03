@@ -25,8 +25,9 @@ export class SesionService {
   constructor(private http: HttpClient) { }
   sesion(): BehaviorSubject<User | null> {
     //this.http.get(environment.ruta_api + 'assets/api/sesion.php', { responseType: 'json' }).subscribe(s =>
-    //s ? this.fillPerfil(s) : this.sesionActiva.next(null)
-    this.http.get(environment.ruta_login, { responseType: 'json' }).subscribe(s => {
+    //s ? this.fillPerfil(s) : this.sesionActiva.next(null));
+    this.http.get(environment.ruta_login, { responseType: 'json' }).subscribe((s: any) => {
+      this.perfil = s as User;
       this.sesionActiva.next(s);
     });
     return this.sesionActiva;
@@ -67,5 +68,5 @@ export class SesionService {
       this.sesionActiva.next(this.perfil);
     });
   }
-  */
+  //*/
 }

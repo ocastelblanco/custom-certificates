@@ -111,6 +111,59 @@ class WhereTest extends MedooTestCase
      * @covers ::whereClause()
      * @dataProvider typesProvider
      */
+    public function testBetweenStringWhere($type)
+    {
+        $this->setType($type);
+
+        $this->database->select("account", "user_name", [
+            "location[<>]" => ['New York', 'Santo']
+        ]);
+
+        $this->assertQuery(
+            <<<EOD
+            SELECT "user_name"
+            FROM "account"
+            WHERE
+            ("location" BETWEEN 'New York' AND 'Santo')
+            EOD,
+            $this->database->queryString
+        );
+    }
+
+    /**
+     * @covers ::select()
+     * @covers ::dataImplode()
+     * @covers ::whereClause()
+     * @dataProvider typesProvider
+     */
+    public function testBetweenRawWhere($type)
+    {
+        $this->setType($type);
+
+        $this->database->select("account", "user_name", [
+            "birthday[<>]" => [
+                Medoo::raw("to_date(:from, 'YYYY-MM-DD')", [":from" => '2015/05/15']),
+                Medoo::raw("to_date(:to, 'YYYY-MM-DD')", [":to" => '2025/05/15'])
+            ]
+        ]);
+
+        $this->assertQuery(
+            <<<EOD
+            SELECT "user_name"
+            FROM "account"
+            WHERE
+            ("birthday" BETWEEN to_date('2015/05/15', 'YYYY-MM-DD') AND to_date('2025/05/15', 'YYYY-MM-DD'))
+            EOD,
+            $this->database->queryString
+        );
+    }
+
+    /**
+     * @covers ::select()
+     * @covers ::dataImplode()
+     * @covers ::whereClause()
+     * @dataProvider typesProvider
+     */
     public function testGreaterDateTimeWhere($type)
     {
         $this->setType($type);
@@ -382,7 +435,8 @@ class WhereTest extends MedooTestCase
         ], [
             "post.content"
         ], [
-            "post.restrict[<]account.age"
+            "post.restrict[<]account.age",
+            "post.type[=]account.type"
         ]);
 
         $this->assertQuery(
@@ -391,7 +445,9 @@ class WhereTest extends MedooTestCase
             FROM "post"
             LEFT JOIN "account"
             USING ("user_id")
-            WHERE "post"."restrict" < "account"."age"
+            WHERE
+            "post"."restrict" < "account"."age" AND
+            "post"."type" = "account"."type"
             EOD,
             $this->database->queryString
         );
@@ -408,7 +464,8 @@ class WhereTest extends MedooTestCase
         $this->setType($type);
 
         $this->database->select("account", "user_name", [
-            "city[~]" => "lon"
+            "city[~]" => "lon",
+            "name[~]" => "some-name"
         ]);
 
         $this->assertQuery(
@@ -416,7 +473,8 @@ class WhereTest extends MedooTestCase
             SELECT "user_name"
             FROM "account"
             WHERE
-            ("city" LIKE '%lon%')
+            ("city" LIKE '%lon%') AND
+            ("name" LIKE '%some-name%')
             EOD,
             $this->database->queryString
         );
@@ -485,7 +543,8 @@ class WhereTest extends MedooTestCase
         $this->setType($type);
 
         $this->database->select("account", "user_name", [
-            "city[~]" => "some_where"
+            "city[~]" => "some_where",
+            "county[~]" => "[a-f]stan"
         ]);
 
         $this->assertQuery(
@@ -493,7 +552,8 @@ class WhereTest extends MedooTestCase
             SELECT "user_name"
             FROM "account"
             WHERE
-            ("city" LIKE 'some_where')
+            ("city" LIKE 'some_where') AND
+            ("county" LIKE '[a-f]stan')
             EOD,
             $this->database->queryString
         );
@@ -981,6 +1041,35 @@ class WhereTest extends MedooTestCase
             <<<EOD
             SELECT "user_name"
             FROM "account"
+            WHERE "id" => 10
+            EOD,
+            $this->database->queryString
+        );
+    }
+
+    /**
+     * @covers ::select()
+     * @covers ::dataImplode()
+     * @covers ::whereClause()
+     * @dataProvider typesProvider
+     */
+    public function testRawWhereWithJoinClause($type)
+    {
+        $this->setType($type);
+
+        $this->database->select("post", [
+                "[>]account" => "user_id",
+            ], [
+                "post.content"
+            ],
+            Medoo::raw("WHERE <id> => 10")
+        );
+
+        $this->assertQuery(
+            <<<EOD
+            SELECT "post"."content"
+            FROM "post"
+            LEFT JOIN "account" USING ("user_id")
             WHERE "id" => 10
             EOD,
             $this->database->queryString

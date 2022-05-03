@@ -1,22 +1,38 @@
 <header class="header">
     <div class="branding">
-        <a routerLink="/consultar" class="nav-link">
-            <img src="assets/img/acg_logo.png" alt="">
+        <a routerLink="/consultar"
+           class="nav-link">
+            <img src="assets/img/acg_logo.png"
+                 alt="">
             <span>Generador de certificados</span>
         </a>
     </div>
-    <div class="header-nav" *ngIf="sesionActiva">
-        <a routerLink="/consultar/descargar" class="nav-link nav-text" routerLinkActive="active">Descargar</a>
-        <a routerLink="/consultar/generar" class="nav-link nav-text" routerLinkActive="active" *ngIf="sesionActiva.admin">Generar</a>
+    <div class="header-nav"
+         *ngIf="sesionActiva">
+        <a routerLink="/consultar/descargar"
+           class="nav-link nav-text"
+           routerLinkActive="active">
+            Descargar
+        </a>
+        <a routerLink="/consultar/generar"
+           class="nav-link nav-text"
+           routerLinkActive="active"
+           *ngIf="sesionActiva.admin">
+            Generar
+        </a>
     </div>
-    <div class="header-actions" *ngIf="sesionActiva">
-        <a routerLink="/consultar" class="nav-link nav-icon" (click)="logout()">
+    <div class="header-actions"
+         *ngIf="sesionActiva">
+        <a routerLink="/consultar"
+           class="nav-link nav-icon"
+           (click)="logout()">
             <clr-icon shape="logout"></clr-icon>
         </a>
     </div>
 </header>
 <div class="content-container">
     <div class="content-area">
+        <!-- SESION ACTIVA: {{sesionActiva | json}} -->
         <app-login *ngIf="!sesionActiva"></app-login>
         <router-outlet *ngIf="sesionActiva"></router-outlet>
     </div>

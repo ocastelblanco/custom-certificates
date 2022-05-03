@@ -29,8 +29,11 @@ if (
   //SMTP::DEBUG_OFF = off (for production use)
   //SMTP::DEBUG_CLIENT = client messages
   //SMTP::DEBUG_SERVER = client and server messages
-  $mail->SMTPDebug = SMTP::DEBUG_OFF;
+  //$mail->SMTPDebug = SMTP::DEBUG_OFF;
+  $mail->SMTPDebug = SMTP::DEBUG_SERVER;
 
+
+  /** Autenticación con GMail */
   $mail->Host = 'smtp.gmail.com';
   $mail->Port = 587;
   $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
@@ -50,6 +53,8 @@ if (
   );
 
   $mail->setFrom($email, 'Grupo Capacitación ACG');
+  /** Fin de autenciación con GMail */
+
   //$mail->addAddress($correo, $nombre);
   $mail->addAddress('ocastelblanco@gmail.com', 'Oliver Castelblanco');
   $mail->Subject = $asunto;
@@ -57,7 +62,12 @@ if (
   $mail->msgHTML($contenido);
   $mail->AltBody = $altbody;
 
-  //*
+
+  /* GoDaddy no permite conectarse con GMail, por lo tanto, se elimina la opción de enviar correo */
+  print_r(json_encode(array("error" => null)));
+  /* Fin de GoDaddy no permite conectarse con GMail, por lo tanto, se elimina la opción de enviar correo */
+
+  /* Cuando se pueda conectar con GMail (cuando esté montado en AWS) *
   if (!$mail->send()) {
     print_r(json_encode(array("error" => $mail->ErrorInfo)));
   } else {
