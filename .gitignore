@@ -12,6 +12,9 @@
 /src/assets/lib/vendor/*
 /src/assets/api/credentials.json
 /src/assets/api/token.json
+/src/assets/config/token.txt
+/src/assets/api/enviarEmails.csv
+/src/assets/api/gmail-cli.json
 
 # profiling files
 chrome-profiler-events*.json
