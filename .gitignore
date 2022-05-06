@@ -8,13 +8,13 @@
 /bazel-out
 
 # dependencies
-/node_modules
 /src/assets/lib/vendor/*
-/src/assets/api/credentials.json
-/src/assets/api/token.json
-/src/assets/config/token.txt
-/src/assets/api/enviarEmails.csv
-/src/assets/api/gmail-cli.json
+/node_modules
+credentials.json
+token.json
+token.txt
+enviarEmails.csv
+gmail-cli.php
 
 # profiling files
 chrome-profiler-events*.json
