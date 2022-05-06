@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService, Notificacion, ErrorEnvio } from 'src/app/servicios/api.service';
 import { SesionService } from 'src/app/servicios/sesion.service';
 import { Certificado, PdfService } from 'src/app/servicios/pdf.service';
+import { ExcelService, ReporteXLSX } from 'src/app/servicios/excel.service';
 import { FileSaverService } from 'ngx-filesaver';
 import { jsPDF } from 'jspdf';
 import * as JSZip from 'jszip';
@@ -14,6 +15,17 @@ import * as JSZip from 'jszip';
 export class DescargarComponent implements OnInit {
   data!: Certificado[];
   certSel: Certificado[] = [];
+  encabezadoExcel: ReporteXLSX = {
+    nombres: "Nombres y Apellidos",
+    identificacion: "# Identificación",
+    certificado: "Número de Certificado",
+    curso: "Evento",
+    intensidad: "Intensidad horaria",
+    fecha: "Fecha de emisión",
+    ubicacion: "Ciudad/País",
+    modalidad: "Modalidad",
+    empresa: "Empresa",
+  };
   abreModal: boolean = false;
   modalNotificar: boolean = false;
   notificando: boolean = false;
@@ -25,7 +37,8 @@ export class DescargarComponent implements OnInit {
     public sesion: SesionService,
     private api: ApiService,
     private pdf: PdfService,
-    private fs: FileSaverService
+    private fs: FileSaverService,
+    private excel: ExcelService
   ) { }
   ngOnInit(): void {
     this.generaData();
@@ -39,7 +52,7 @@ export class DescargarComponent implements OnInit {
     }
   }
   fecha(s: string): number {
-    let salida: number
+    let salida: number;
     if (s === '0') {
       salida = 0;
     } else {
@@ -103,5 +116,31 @@ export class DescargarComponent implements OnInit {
     this.certSel = [];
     this.numNotif = 0;
     this.porNotif = 0;
+  }
+  crearExcel(): void {
+    const salida: ReporteXLSX[] = [this.encabezadoExcel];
+    this.certSel.forEach(cert => {
+      const fecha: Date = new Date(parseInt(cert.fecha) * 1000);
+      salida.push({
+        nombres: cert.firstname + ' ' + cert.lastname,
+        identificacion: cert.idnumber,
+        certificado: 'CV-' + cert.id,
+        curso: cert.fullname,
+        intensidad: cert.intensidad,
+        fecha: this.pdf.dosDig(fecha.getMonth() + 1) + '-' + fecha.getFullYear(),
+        ubicacion: cert.city + ', ' + cert.country,
+        modalidad: 'Virtual',
+        empresa: cert.institution
+      });
+    });
+    let hoy: Date = new Date(Date.now());
+    let nomExcel: string = 'Certificados_ACG_';
+    nomExcel += hoy.getFullYear();
+    nomExcel += this.pdf.dosDig(hoy.getMonth() + 1);
+    nomExcel += this.pdf.dosDig(hoy.getDate());
+    nomExcel += this.pdf.dosDig(hoy.getHours());
+    nomExcel += this.pdf.dosDig(hoy.getMinutes());
+    nomExcel += this.pdf.dosDig(hoy.getSeconds());
+    this.excel.exportAsExcelFile(salida, nomExcel, true);
   }
 }

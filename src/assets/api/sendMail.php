@@ -25,12 +25,13 @@ if (
   $mail = new PHPMailer();
   $mail->isSMTP();
 
-  //Enable SMTP debugging
   //SMTP::DEBUG_OFF = off (for production use)
   //SMTP::DEBUG_CLIENT = client messages
   //SMTP::DEBUG_SERVER = client and server messages
-  //$mail->SMTPDebug = SMTP::DEBUG_OFF;
-  $mail->SMTPDebug = SMTP::DEBUG_SERVER;
+
+  //Enable SMTP debugging
+  $mail->SMTPDebug = SMTP::DEBUG_OFF;
+  //$mail->SMTPDebug = SMTP::DEBUG_SERVER;
 
 
   /** Autenticación con GMail */
@@ -64,10 +65,10 @@ if (
 
 
   /* GoDaddy no permite conectarse con GMail, por lo tanto, se elimina la opción de enviar correo */
-  print_r(json_encode(array("error" => null)));
+  //print_r(json_encode(array("error" => null)));
   /* Fin de GoDaddy no permite conectarse con GMail, por lo tanto, se elimina la opción de enviar correo */
 
-  /* Cuando se pueda conectar con GMail (cuando esté montado en AWS) *
+  //* Cuando se pueda conectar con GMail (cuando esté montado en AWS) *
   if (!$mail->send()) {
     print_r(json_encode(array("error" => $mail->ErrorInfo)));
   } else {

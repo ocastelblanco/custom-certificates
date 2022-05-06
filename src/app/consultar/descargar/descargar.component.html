@@ -61,19 +61,29 @@
                   class="btn"
                   *ngIf="certSel.length > 0"
                   (click)="crearPdf()">
-            <clr-icon shape="download"></clr-icon> Descargar
+            <clr-icon shape="download"></clr-icon>
+            Descargar certificado{{certSel.length > 1 ? 's' :''}}
           </button>
           <button type="button"
                   class="btn"
                   *ngIf="certSel.length > 0"
                   (click)="modalNotificar = true">
-            <clr-icon shape="envelope"></clr-icon> Volver a notificar
+            <clr-icon shape="envelope"></clr-icon>
+            Volver a notificar
+          </button>
+          <button type="button"
+                  class="btn"
+                  *ngIf="certSel.length > 0"
+                  (click)="crearExcel()">
+            <clr-icon shape="file"></clr-icon>
+            Descargar seleccionado{{certSel.length > 1 ? 's' :''}} a Excel
           </button>
         </div>
       </clr-dg-action-bar>
       <clr-dg-column [clrDgField]="'id'"># CERT.</clr-dg-column>
       <clr-dg-column [clrDgField]="'firstname'">Nombres</clr-dg-column>
       <clr-dg-column [clrDgField]="'lastname'">Apellidos</clr-dg-column>
+      <clr-dg-column [clrDgField]="'email'">Email</clr-dg-column>
       <clr-dg-column [clrDgField]="'idnumber'"># Identidad</clr-dg-column>
       <clr-dg-column [clrDgField]="'institution'">Institución</clr-dg-column>
       <clr-dg-column [clrDgField]="'city'">Ciudad</clr-dg-column>
@@ -87,6 +97,7 @@
         <clr-dg-cell>CV-{{cert.id}}</clr-dg-cell>
         <clr-dg-cell>{{cert.firstname}}</clr-dg-cell>
         <clr-dg-cell>{{cert.lastname}}</clr-dg-cell>
+        <clr-dg-cell>{{cert.email}}</clr-dg-cell>
         <clr-dg-cell>{{cert.idnumber}}</clr-dg-cell>
         <clr-dg-cell>{{cert.institution}}</clr-dg-cell>
         <clr-dg-cell>{{cert.city}}</clr-dg-cell>
