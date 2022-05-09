@@ -140,7 +140,10 @@
                             "e2e/tsconfig.json"
                         ],
                         "exclude": [
-                            "**/node_modules/**"
+                            "**/node_modules/**",
+                            "src/assets/api/enviarEmails.csv",
+                            "src/assets/api/gmail-cli.php",
+                            "src/assets/config/token.txt"
                         ]
                     }
                 },

@@ -1,4 +1,7 @@
 <?php
+if (php_sapi_name() != 'cli') {
+  throw new Exception('Esta aplicación solo puede ejecutarse desde CLI.');
+}
 require("../config/config.php");
 $nombres = array("userid", "nombres", "apellidos", "email", "identificacion", "fullname", "shortname", "courseid", "notaFinal", "fecha");
 $query = "SELECT u.id " . $nombres[0] . ", ";
@@ -18,6 +21,8 @@ $query .= "JOIN " . $tablas['user'] . " AS u ON u.id = ra.userid ";
 $query .= "JOIN " . $tablas['gg'] . " AS gg ON gg.userid = u.id ";
 $query .= "JOIN " . $tablas['gi'] . " AS gi ON gi.id = gg.itemid ";
 $query .= "WHERE gi.courseid = c.id AND gi.itemtype = 'course' ";
+$query .= "AND ROUND(gg.finalgrade,2) > 79.99 ";
+$query .= "AND FROM_UNIXTIME(gg.timemodified) > DATE_ADD(NOW(), INTERVAL -1 MONTH)";
 if (isset($_GET["id"])) $query .= "AND u.id = " . $_GET["id"];
 // Se obtiene el listado completo de todos los participantes con calificación
 $resultado = $database->query($query)->fetchAll();

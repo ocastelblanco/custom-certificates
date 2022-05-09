@@ -3,7 +3,6 @@
 namespace PHPMailer\PHPMailer;
 
 require('../config/config.php');
-require('../lib/vendor/autoload.php');
 
 use League\OAuth2\Client\Provider\Google;
 

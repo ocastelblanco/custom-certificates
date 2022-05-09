@@ -1,4 +1,21 @@
 <?php
+// Se verifica que sea CLI
+if (php_sapi_name() != 'cli') {
+  throw new Exception('Esta aplicación solo puede ejecutarse desde CLI.');
+}
+// Almacena las variables enviadas por CLI en $_VAR
+$_VAR = [];
+foreach ($argv as $pos => $arg) {
+  if ($pos == 0) continue;
+  if (substr($arg, 0, 2) == '--') {
+    $key = explode("=", substr($arg, 2))[0];
+    $val = explode("=", substr($arg, 2))[1];
+    $_VAR[$key] = $val;
+  } elseif (substr($arg, 0, 1) == '-') {
+    $key = substr($arg, 1);
+    $_VAR[$key] = true;
+  }
+}
 require('../config/config.php');
 require('../lib/vendor/autoload.php');
 
@@ -10,17 +27,19 @@ use League\OAuth2\Client\Provider\Google;
 date_default_timezone_set('America/Bogota');
 
 if (
-  isset($_POST["asunto"]) &&
-  isset($_POST["correo"]) &&
-  isset($_POST["nombre"]) &&
-  isset($_POST["contenido"]) &&
-  isset($_POST["altbody"])
+  isset($_VAR["asunto"]) &&
+  isset($_VAR["correo"]) &&
+  isset($_VAR["nombre"]) &&
+  isset($_VAR["contenido"]) &&
+  isset($_VAR["altbody"]) &&
+  isset($_VAR["pdf"])
 ) {
-  $asunto = $_POST["asunto"];
-  $correo = $_POST["correo"];
-  $nombre = $_POST["nombre"];
-  $contenido = $_POST["contenido"];
-  $altbody = $_POST["altbody"];
+  $asunto = $_VAR["asunto"];
+  $correo = $_VAR["correo"];
+  $nombre = $_VAR["nombre"];
+  $contenido = $_VAR["contenido"];
+  $altbody = $_VAR["altbody"];
+  $pdf = $_VAR["pdf"];
 
   $mail = new PHPMailer();
   $mail->isSMTP();
@@ -62,10 +81,12 @@ if (
   $mail->CharSet = PHPMailer::CHARSET_UTF8;
   $mail->msgHTML($contenido);
   $mail->AltBody = $altbody;
+  $mail->addAttachment("certificados/$pdf");
 
   if (!$mail->send()) {
     print_r(json_encode(array("error" => $mail->ErrorInfo)));
   } else {
+    unlink("certificados/$pdf");
     print_r(json_encode(array("error" => null)));
   }
 }
