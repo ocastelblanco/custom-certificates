@@ -1,0 +1,24 @@
+.dragdrop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 150px;
+  background-color: #ffffff;
+  color: #0072d1;
+  border-radius: 1em;
+  .texto {
+    font-size: 1.5em;
+  }
+  &.over {
+    background-color: #0072d1;
+    color: #ffffff;
+  }
+  &.leave {
+    background-color: #eeeeee;
+  }
+  &.drop {
+    background-color: #565656;
+  }
+}

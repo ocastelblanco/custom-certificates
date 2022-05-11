@@ -1,0 +1,111 @@
+<clr-alert [clrAlertType]="'info'">
+  <clr-alert-item>
+    <span class="alert-text">
+      Si tiene problemas de envío, intente crear un token para Gmail
+      <a [href]="rutaToken"
+         target="_blank">
+        haciendo clic en este vínculo
+      </a>
+      .
+    </span>
+  </clr-alert-item>
+</clr-alert>
+<div class="clr-row">
+  <div class="clr-col-12"
+       *ngIf="archivoCargado && data.length > 0 else cargarArchivo">
+    <clr-datagrid [(clrDgSelected)]="notifSel">
+      <clr-dg-action-bar>
+        <div class="btn-group btn-secundary btn-sm">
+          <button type="button"
+                  class="btn"
+                  *ngIf="notifSel.length > 0"
+                  (click)="modalNotificar = true">
+            <clr-icon shape="envelope"></clr-icon> Notificar
+          </button>
+        </div>
+      </clr-dg-action-bar>
+      <clr-dg-column [clrDgField]="'nombre'">Nombre</clr-dg-column>
+      <clr-dg-column [clrDgField]="'username'">Usuario</clr-dg-column>
+      <clr-dg-column [clrDgField]="'password'">Contraseña</clr-dg-column>
+      <clr-dg-column [clrDgField]="'email'">Email</clr-dg-column>
+      <clr-dg-column [clrDgField]="'curso'">Curso</clr-dg-column>
+      <clr-dg-column [clrDgField]="'inicio'">Inicio</clr-dg-column>
+      <clr-dg-column [clrDgField]="'fin'">Fin</clr-dg-column>
+      <clr-dg-row *clrDgItems="let user of data"
+                  [clrDgItem]="user">
+        <clr-dg-cell>{{user.nombre}}</clr-dg-cell>
+        <clr-dg-cell>{{user.username}}</clr-dg-cell>
+        <clr-dg-cell>{{user.password}}</clr-dg-cell>
+        <clr-dg-cell>{{user.email}}</clr-dg-cell>
+        <clr-dg-cell>{{user.curso}}</clr-dg-cell>
+        <clr-dg-cell>{{user.inicio}}</clr-dg-cell>
+        <clr-dg-cell>{{user.fin}}</clr-dg-cell>
+      </clr-dg-row>
+      <clr-dg-footer>
+        <clr-dg-pagination #pagination
+                           [clrDgPageSize]="10">
+          <clr-dg-page-size [clrPageSizeOptions]="[10,20,50,100,200]">Registros por página
+          </clr-dg-page-size>
+          {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}} de {{pagination.totalItems}}
+          registros
+        </clr-dg-pagination>
+      </clr-dg-footer>
+
+    </clr-datagrid>
+  </div>
+  <ng-template #cargarArchivo>
+    <div class="clr-col-lg-6 clr-col-md-10 clr-col-12">
+      <div class="dragdrop"
+           (fileDropped)="sueltaArchivo($event)"
+           (click)="inputFile.click()"
+           appDragDropFile>
+        <div class="icono">
+          <clr-icon size="72"
+                    shape="upload"></clr-icon>
+        </div>
+        <div class="texto">Arrastre y suelte el archivo CSV aquí</div>
+        <input #inputFile
+               (change)="sueltaArchivo($any($event).target.files[0])"
+               hidden
+               accept="text/csv"
+               type="file">
+      </div>
+    </div>
+  </ng-template>
+</div>
+<clr-modal [(clrModalOpen)]="modalNotificar"
+           [clrModalClosable]="!notificando">
+  <h3 class="modal-title">Notificar nuevos usuarios</h3>
+  <div class="modal-body"
+       *ngIf="!notificando">
+    <p>
+      A continuación se enviará un email a cada participante para notificarle sobre su incorporación al curso señalado.
+    </p>
+    <p>
+      Haga clic en ACEPTAR para iniciar el proceso de notificación de {{notifSel.length}} participantes.
+    </p>
+  </div>
+  <div class="modal-body"
+       *ngIf="notificando">
+    <p>Notificando a {{numNotif}} participantes de {{notifSel.length}}.</p>
+    <clr-progress-bar [clrValue]="porNotif"></clr-progress-bar>
+  </div>
+  <div class="modal-footer">
+    <button type="button"
+            class="btn btn-outline"
+            (click)="cerrarModal()"
+            *ngIf="!notificando">
+      Cancelar
+    </button>
+    <button type="button"
+            class="btn btn-primary"
+            (click)="cerrarModal()"
+            *ngIf="notificando && porNotif === 100">
+      Cerrar
+    </button>
+    <button type="button"
+            class="btn btn-primary"
+            (click)="notificar()"
+            *ngIf="!notificando">Aceptar</button>
+  </div>
+</clr-modal>

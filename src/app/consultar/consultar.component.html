@@ -20,6 +20,12 @@
            *ngIf="sesionActiva.admin">
             Generar
         </a>
+        <a routerLink="/consultar/notificar"
+           class="nav-link nav-text"
+           routerLinkActive="active"
+           *ngIf="sesionActiva.admin">
+            Notificar
+        </a>
     </div>
     <div class="header-actions"
          *ngIf="sesionActiva">

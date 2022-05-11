@@ -17,6 +17,21 @@ export class ConsultarComponent implements OnInit {
     /* */
     this.sesion.sesion().subscribe(s => {
       this.sesionActiva = s;
+      /*
+      this.sesionActiva = {
+        id: '1',
+        idnumber: '1',
+        firstname: 'Oliver',
+        lastname: 'Castelblanco',
+        email: 'ocastelblanco@gmail.com',
+        city: 'Bogotá',
+        country: 'CO',
+        institution: 'Mediateca',
+        admin: true,
+        sesionid: '1'
+      };
+      this.route.navigateByUrl('/consultar/notificar');
+      //*/
       if (this.sesionActiva) this.route.navigateByUrl('/consultar/descargar');
     });
   }

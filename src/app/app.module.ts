@@ -14,6 +14,8 @@ import { ConsultarComponent } from './consultar/consultar.component';
 import { LoginComponent } from './consultar/login/login.component';
 import { DescargarComponent } from './consultar/descargar/descargar.component';
 import { GenerarComponent } from './consultar/generar/generar.component';
+import { NotificarComponent } from './consultar/notificar/notificar.component';
+import { DragDropFileDirective } from './directivas/drag-drop-file.directive';
 
 registerLocaleData(localeCo);
 
@@ -24,7 +26,9 @@ registerLocaleData(localeCo);
     ConsultarComponent,
     LoginComponent,
     DescargarComponent,
-    GenerarComponent
+    GenerarComponent,
+    NotificarComponent,
+    DragDropFileDirective
   ],
   imports: [
     BrowserModule,

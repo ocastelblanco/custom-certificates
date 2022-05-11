@@ -103,4 +103,12 @@ export class ApiService {
   postNot(id: string): Observable<any> {
     return this.http.get(environment.ruta_api + 'assets/api/postNot.php?id=' + id, { responseType: 'json' });
   }
+  generaToken(): Observable<any> {
+    return this.http.get(environment.ruta_api + 'assets/api/generaToken.php', { responseType: 'json' });
+  }
+  notificaNuevos(data: any): Observable<any> {
+    const postData: FormData = new FormData();
+    Object.keys(data).forEach((k, i) => postData.append(k, String(Object.values(data)[i])));
+    return this.http.post(environment.ruta_api + 'assets/api/notificar.php', postData, { responseType: 'json' });
+  }
 }

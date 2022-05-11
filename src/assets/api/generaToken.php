@@ -2,6 +2,10 @@
 
 namespace PHPMailer\PHPMailer;
 
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method,Access-Control-Request-Headers, Authorization");
+header("Access-Control-Allow-Methods: HEAD, GET, POST, PUT, PATCH, DELETE, OPTIONS");
+
 require('../config/config.php');
 
 use League\OAuth2\Client\Provider\Google;
@@ -58,4 +62,5 @@ if (!isset($_GET['code'])) {
 	//Use this to get a new access token if the old one expires
 	$nuevoToken = $token->getRefreshToken() ?? $token->getToken();
 	file_put_contents($archivo, $nuevoToken);
+	print_r(json_encode(array("token" => $nuevoToken)));
 }
