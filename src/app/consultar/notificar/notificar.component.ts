@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ApiService } from 'src/app/servicios/api.service';
 import { environment } from 'src/environments/environment';
 
@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
   templateUrl: './notificar.component.html',
   styleUrls: ['./notificar.component.scss']
 })
-export class NotificarComponent {
+export class NotificarComponent implements OnInit {
   nombresCursos: any = {
     "ACG Calidad - Campus Virtual": "ACG CALIDAD",
     "EM_calidad_analitica": "CURSO VIRTUAL GESTIÓN ANALÍTICA EN EL LABORATORIO CLÍNICO",
@@ -35,6 +35,11 @@ export class NotificarComponent {
   errorToken: boolean = false;
   rutaToken: string = environment.ruta_api + 'assets/api/generaToken.php';
   constructor(private api: ApiService) { }
+  ngOnInit(): void {
+    this.api.generaToken().subscribe(res => {
+      if (!res.token) this.errorToken = true;
+    });
+  }
   sueltaArchivo(archivo: File): void {
     this.archivoCargado = true;
     const reader: FileReader = new FileReader();

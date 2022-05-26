@@ -2,70 +2,36 @@
 require('../config/config.php');
 require('../lib/vendor/autoload.php');
 
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
-use PHPMailer\PHPMailer\OAuth;
-use League\OAuth2\Client\Provider\Google;
-
 date_default_timezone_set('America/Bogota');
+
+$client = getClient();
+$service = new Google_Service_Gmail($client);
 
 if (
   isset($_POST["asunto"]) &&
   isset($_POST["correo"]) &&
   isset($_POST["nombre"]) &&
   isset($_POST["contenido"]) &&
-  isset($_POST["altbody"])
+  isset($_POST["altbody"]) /*&&
+  isset($_POST["adjunto"])*/
 ) {
   $asunto = $_POST["asunto"];
   $correo = $_POST["correo"];
   $nombre = $_POST["nombre"];
   $contenido = $_POST["contenido"];
   $altbody = $_POST["altbody"];
+  //$adjunto = $_POST["adjunto"];
 
-  $mail = new PHPMailer();
-  $mail->isSMTP();
+  $dirAdjunto = __DIR__ . "/certificados";
 
-  //SMTP::DEBUG_OFF = off (for production use)
-  //SMTP::DEBUG_CLIENT = client messages
-  //SMTP::DEBUG_SERVER = client and server messages
+  $email = "ocastelblanco@gmail.com";
 
-  //Enable SMTP debugging
-  $mail->SMTPDebug = SMTP::DEBUG_OFF;
-  //$mail->SMTPDebug = SMTP::DEBUG_SERVER;
-
-
-  /** Autenticación con GMail */
-  $mail->Host = 'smtp.gmail.com';
-  $mail->Port = 587;
-  $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-  $mail->SMTPAuth = true;
-  $mail->AuthType = 'XOAUTH2';
-  $provider = new Google(['clientId' => $clientId, 'clientSecret' => $clientSecret]);
-  $mail->setOAuth(
-    new OAuth(
-      [
-        'provider' => $provider,
-        'clientId' => $clientId,
-        'clientSecret' => $clientSecret,
-        'refreshToken' => $refreshToken,
-        'userName' => $email,
-      ]
-    )
-  );
-
-  $mail->setFrom($email, 'Grupo Capacitación ACG');
-  /** Fin de autenciación con GMail */
-
-  //$mail->addAddress($correo, $nombre);
-  $mail->addAddress('ocastelblanco@gmail.com', 'Oliver Castelblanco');
-  $mail->Subject = $asunto;
-  $mail->CharSet = PHPMailer::CHARSET_UTF8;
-  $mail->msgHTML($contenido);
-  $mail->AltBody = $altbody;
-
-  if (!$mail->send()) {
-    print_r(json_encode(array("error" => $mail->ErrorInfo)));
-  } else {
-    print_r(json_encode(array("error" => null)));
+  $mensaje = creaMensaje($email, $asunto, $contNotifHTML, $contNotifALT); //, $adjunto, $dirAdjunto);
+  $userId = 'me';
+  try {
+    $message = $service->users_messages->send($userId, $mensaje);
+    print_r(json_encode(array("error" => null, "message" => "Se ha enviado el correo con ID " . $message->getId())));
+  } catch (Exception $e) {
+    print_r(json_encode(array("error" => $e->getMessage())));
   }
 }
