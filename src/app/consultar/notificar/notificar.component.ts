@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ApiService } from 'src/app/servicios/api.service';
+import { ApiService, Notificacion } from 'src/app/servicios/api.service';
+import { ExcelService } from 'src/app/servicios/excel.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -34,7 +35,12 @@ export class NotificarComponent implements OnInit {
   porNotif: number = 0;
   errorToken: boolean = false;
   rutaToken: string = environment.ruta_api + 'assets/api/generaToken.php';
-  constructor(private api: ApiService) { }
+  tiposNotif: Array<{ tipo: string, label: string }> = [
+    { tipo: 'registro', label: 'Registro en plataforma' },
+    { tipo: 'certificado', label: 'Generación de certificado' },
+  ];
+  tipoNotificacion: string = 'registro';
+  constructor(private api: ApiService, private excel: ExcelService) { }
   ngOnInit(): void {
     this.api.generaToken().subscribe(res => {
       if (!res.token) this.errorToken = true;
@@ -42,6 +48,71 @@ export class NotificarComponent implements OnInit {
   }
   sueltaArchivo(archivo: File): void {
     this.archivoCargado = true;
+    switch (this.tipoNotificacion) {
+      case 'registro':
+        this.procesaNotRegistro(archivo);
+        break;
+      case 'certificado':
+        this.procesaNotCertificado(archivo);
+        break;
+    }
+  }
+  notificar(): void {
+    this.notificando = true;
+    this.numNotif = 0;
+    this.porNotif = 0;
+    switch (this.tipoNotificacion) {
+      case 'registro':
+        this.notificarRegistro();
+        break;
+      case 'certificado':
+        this.notificarCertificado();
+        break;
+    }
+  }
+  notificarCertificado(): void {
+    this.notifSel.forEach((participante: { nombre: string, email: string, curso: string }) => {
+      const notificacion: Notificacion = {
+        nombre: participante.nombre,
+        correo: participante.email,
+        curso: participante.curso
+      };
+      this.api.sendMail(notificacion).subscribe(res => {
+        if (res.error == null) {
+          this.numNotif++;
+          this.porNotif = Math.ceil((this.numNotif * 100) / this.data.length);
+        }
+      });
+    });
+  }
+  notificarRegistro(): void {
+    this.notifSel.forEach(participante => {
+      this.api.notificaNuevos(participante).subscribe(res => {
+        if (res.error == null) {
+          this.numNotif++;
+          this.porNotif = Math.round((this.numNotif * 100) / this.data.length);
+        }
+      });
+    });
+  }
+  cerrarModal(): void {
+    this.modalNotificar = false;
+    this.notificando = false;
+    this.notifSel = [];
+    this.numNotif = 0;
+    this.porNotif = 0;
+  }
+  procesaNotCertificado(archivo: File): void {
+    this.excel.readExcelFile(archivo).subscribe(res => {
+      if (res) {
+        this.data = [];
+        res.forEach((row: string[], index: number) => {
+          if (index > 0) this.data.push({ nombre: row[0] + ' ' + row[1], email: row[2], curso: row[4] });
+        });
+      }
+    });
+  }
+  procesaNotRegistro(archivo: File): void {
     const reader: FileReader = new FileReader();
     const dateOp: any = { year: 'numeric', month: 'long', day: 'numeric' };
     const dia: number = 24 * 60 * 60 * 1000;
@@ -100,25 +171,5 @@ export class NotificarComponent implements OnInit {
         });
       }
     };
-  }
-  notificar(): void {
-    this.notificando = true;
-    this.numNotif = 0;
-    this.porNotif = 0;
-    this.notifSel.forEach(participante => {
-      this.api.notificaNuevos(participante).subscribe(res => {
-        if (res.error == null) {
-          this.numNotif++;
-          this.porNotif = Math.round((this.numNotif * 100) / this.data.length);
-        }
-      });
-    });
-  }
-  cerrarModal(): void {
-    this.modalNotificar = false;
-    this.notificando = false;
-    this.notifSel = [];
-    this.numNotif = 0;
-    this.porNotif = 0;
   }
 }

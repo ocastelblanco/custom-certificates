@@ -29,7 +29,13 @@ export class DragDropFileDirective {
     const files = event.dataTransfer.files;
     if (files.length > 0) {
       const archivo: File = files[0];
-      if (archivo.type.includes('text/csv')) this.fileDropped.emit(archivo);
+      if (
+        archivo.type.includes('text/csv')
+        || archivo.type.includes('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        || archivo.type.includes('application/vnd.ms-excel')
+      ) {
+        this.fileDropped.emit(archivo);
+      }
     }
   }
 }

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService, Calificaciones, ErrorEnvio, Nombres, Notificacion } from 'src/app/servicios/api.service';
 import { ExcelService } from 'src/app/servicios/excel.service';
 import { PdfService } from 'src/app/servicios/pdf.service';
-import { threadId } from 'worker_threads';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-generar',
@@ -28,13 +28,17 @@ export class GenerarComponent implements OnInit {
   errores: ErrorEnvio[] = [];
   generados: number = 0;
   notificados: number = 0;
+  errorToken: boolean = false;
+  rutaToken: string = environment.ruta_api + 'assets/api/generaToken.php';
   constructor(private api: ApiService, private excel: ExcelService, private pdf: PdfService) { }
   ngOnInit(): void {
     this.generaData();
+    this.api.generaToken().subscribe(res => {
+      if (!res.token) this.errorToken = true;
+    });
   }
   generaData(): void {
     this.data = [];
-    console.log('Esta cargando la lista de', this.data);
     this.api.listUsers().subscribe(c => this.data = c);
   }
   exportar(data: Calificaciones[]): void {

@@ -1,4 +1,5 @@
 <?php
+// Envía notificaciones sobre REGISTRO DE PARTICIPANTES EN PLATAFORMA
 require('../config/config.php');
 require('../lib/vendor/autoload.php');
 

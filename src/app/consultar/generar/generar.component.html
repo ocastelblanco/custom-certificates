@@ -1,3 +1,16 @@
+<clr-alert *ngIf="errorToken" [clrAlertType]="'danger'">
+  <clr-alert-item>
+    <span class="alert-text">
+      ERROR: No se ha podido crear un token para Gmail.
+      <br>
+      Haga clic en
+      <a [href]="rutaToken" target="_blank">
+        este vínculo para generar uno nuevo
+      </a>
+      , y vuelva a esta pestaña y recargue.
+    </span>
+  </clr-alert-item>
+</clr-alert>
 <div *ngIf="errores.length > 0">
   <clr-alert clrAlertType="danger" *ngFor="let err of errores">
     <clr-alert-item>
@@ -63,7 +76,8 @@
   <h3 class="modal-title">Generar certificados y notificar</h3>
   <div class="modal-body" *ngIf="!notificando">
     <p>
-      A continuación se generarán todos los certificados seleccionados y se enviará un email a cada participante para notificarle sobre la expedición de dicho certificado y del vínculo desde donde pude descargarlo.
+      A continuación se generarán todos los certificados seleccionados y se enviará un email a cada participante para
+      notificarle sobre la expedición de dicho certificado y del vínculo desde donde pude descargarlo.
     </p>
     <p>
       Haga clic en ACEPTAR para iniciar el proceso de generación y notificación de {{calSel.length}} certificados.

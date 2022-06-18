@@ -17,32 +17,47 @@ $client->setAuthConfig("$configDir/credentials.json");
 $client->setAccessType('offline');
 $client->setPrompt('select_account consent');
 $tokenPath = "$configDir/token.json";
+
 if (file_exists($tokenPath)) {
 	$accessToken = json_decode(file_get_contents($tokenPath), true);
-	$client->setAccessToken($accessToken);
+	if ($accessToken) {
+		$client->setAccessToken($accessToken);
+	}
 }
+
 if ($client->isAccessTokenExpired()) {
+	if (file_exists($tokenPath)) unlink($tokenPath);
 	if ($client->getRefreshToken()) {
 		$client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
 	} else {
 		$authUrl = $client->createAuthUrl();
-		if (isset($_GET['accion'])) print_r(json_encode(array("token" => false)));
-		else echo "<script>window.location.href = '$authUrl';</script>";
+		if (isset($_GET['accion'])) {
+			print_r(json_encode(array("token" => false)));
+			exit();
+		} else {
+			echo "<script>window.location.href = '$authUrl';</script>";
+		}
 		if (isset($_GET['code'])) {
 			$authCode = $_GET['code'];
 			$accessToken = $client->fetchAccessTokenWithAuthCode($authCode);
 			$client->setAccessToken($accessToken);
 		}
-		if (array_key_exists('error', $accessToken)) {
-			if (isset($_GET['accion'])) print_r(json_encode(array("token" => false)));
-			else throw new Exception(join(', ', $accessToken));
+		if (isset($accessToken) && array_key_exists('error', $accessToken)) {
+			if (isset($_GET['accion'])) {
+				print_r(json_encode(array("token" => false)));
+				exit();
+			} else {
+				throw new Exception(join(', ', $accessToken));
+			}
 		}
-	}
-	if (!file_exists(dirname($tokenPath))) {
-		mkdir(dirname($tokenPath), 0700, true);
 	}
 	file_put_contents($tokenPath, json_encode($client->getAccessToken()));
 }
 
-if (isset($_GET['accion'])) print_r(json_encode(array("token" => $client->getAccessToken())));
-else echo "<p>Token: " . $client->getAccessToken() . "</p><p>Cierre esta pestaña y vuelva al anterior proceso.</p>";
+if (isset($_GET['accion'])) {
+	print_r(json_encode(array("token" => $client->getAccessToken())));
+} else {
+	echo "Token:<br> ";
+	print_r(json_encode($client->getAccessToken()));
+	echo "<br>Cierre esta pestaña y vuelva al anterior proceso.";
+}

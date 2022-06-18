@@ -3,6 +3,7 @@ import { ApiService, Notificacion, ErrorEnvio } from 'src/app/servicios/api.serv
 import { SesionService } from 'src/app/servicios/sesion.service';
 import { Certificado, PdfService } from 'src/app/servicios/pdf.service';
 import { ExcelService, ReporteXLSX } from 'src/app/servicios/excel.service';
+import { environment } from 'src/environments/environment';
 import { FileSaverService } from 'ngx-filesaver';
 import { jsPDF } from 'jspdf';
 import * as JSZip from 'jszip';
@@ -33,6 +34,8 @@ export class DescargarComponent implements OnInit {
   porNotif: number = 0;
   errores: ErrorEnvio[] = [];
   notificados: number = 0;
+  errorToken: boolean = false;
+  rutaToken: string = environment.ruta_api + 'assets/api/generaToken.php';
   constructor(
     public sesion: SesionService,
     private api: ApiService,
@@ -42,6 +45,9 @@ export class DescargarComponent implements OnInit {
   ) { }
   ngOnInit(): void {
     this.generaData();
+    this.api.generaToken().subscribe(res => {
+      if (!res.token) this.errorToken = true;
+    });
   }
   generaData(): void {
     this.data = [];

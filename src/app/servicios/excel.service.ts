@@ -2,6 +2,7 @@
 import { Injectable } from '@angular/core';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
+import { Observable } from 'rxjs';
 
 export interface ReporteXLSX {
   nombres: string;
@@ -32,5 +33,20 @@ export class ExcelService {
     const data: Blob = new Blob([buffer], { type: EXCEL_TYPE });
     //FileSaver.saveAs(data, fileName + '_' + new Date().getTime() + EXCEL_EXTENSION);
     FileSaver.saveAs(data, fileName + EXCEL_EXTENSION);
+  }
+  readExcelFile(archivo: File): Observable<any> {
+    const salida: Observable<any> = new Observable<any>(observer => {
+      const reader: FileReader = new FileReader();
+      reader.readAsArrayBuffer(archivo);
+      reader.onload = (e: any) => {
+        const ab: ArrayBuffer = reader.result as ArrayBuffer;
+        const wb: XLSX.WorkBook = XLSX.read(ab, { type: 'array' });
+        const wsname: string = wb.SheetNames[0];
+        const ws: XLSX.WorkSheet = wb.Sheets[wsname];
+        const json: any = XLSX.utils.sheet_to_json(ws, { header: 1 });
+        observer.next(json);
+      };
+    });
+    return salida;
   }
 }

@@ -17,7 +17,7 @@ export class ConsultarComponent implements OnInit {
     /* */
     this.sesion.sesion().subscribe(s => {
       this.sesionActiva = s;
-      /*
+      //*
       this.sesionActiva = {
         id: '1',
         idnumber: '1',
@@ -37,5 +37,6 @@ export class ConsultarComponent implements OnInit {
   }
   logout() {
     this.sesion.logout();
+    window.close();
   }
 }

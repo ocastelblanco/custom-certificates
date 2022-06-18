@@ -85,14 +85,12 @@ export class ApiService {
     return this.http.get(environment.ruta_api + 'assets/api/listUsers.php' + get, { responseType: 'json' });
   }
   sendMail(get: Notificacion): Observable<any> {
-    const contenido: string = this.contHTML.replace(/\{\{nombre\}\}/g, get.nombre).replace(/\{\{curso\}\}/g, get.curso);
-    const altbody: string = this.contAlt.replace(/\{\{nombre\}\}/g, get.nombre).replace(/\{\{curso\}\}/g, get.curso);
+    // Envía notificaciones sobre GENERACIÓN DE CERTIFICADOS
     const data: FormData = new FormData();
     data.set('nombre', get.nombre);
+    data.append('curso', get.curso ?? '');
     data.append('correo', get.correo);
-    data.append('asunto', get.asunto ? get.asunto : this.asunto);
-    data.append('contenido', get.contenido ? get.contenido : contenido);
-    data.append('altbody', get.altbody ? get.altbody : altbody);
+    data.append('asunto', get.asunto ?? this.asunto);
     return this.http.post(environment.ruta_api + 'assets/api/sendMail.php', data, { responseType: 'json' });
   }
   postCert(data: any): Observable<any> {
@@ -107,6 +105,7 @@ export class ApiService {
     return this.http.get(environment.ruta_api + 'assets/api/generaToken.php?accion', { responseType: 'json' });
   }
   notificaNuevos(data: any): Observable<any> {
+    // Envía notificaciones sobre REGISTRO DE NUEVOS PARTICIPANTES EN PLATAFORMA
     const postData: FormData = new FormData();
     Object.keys(data).forEach((k, i) => postData.append(k, String(Object.values(data)[i])));
     return this.http.post(environment.ruta_api + 'assets/api/notificar.php', postData, { responseType: 'json' });
