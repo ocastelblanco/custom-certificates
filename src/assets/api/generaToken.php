@@ -10,12 +10,12 @@ date_default_timezone_set('America/Bogota');
 
 chdir('../config');
 $configDir = getcwd();
-$client = new Google_Client();
+$client = new Google\Client();
 $client->setApplicationName('ACG Certificates');
-$client->setScopes(Google_Service_Gmail::MAIL_GOOGLE_COM);
+$client->setScopes(Google\Service\Gmail::MAIL_GOOGLE_COM);
 $client->setAuthConfig("$configDir/credentials.json");
 $client->setAccessType('offline');
-$client->setPrompt('select_account consent');
+$client->setPrompt('consent');
 $tokenPath = "$configDir/token.json";
 
 if (file_exists($tokenPath)) {
