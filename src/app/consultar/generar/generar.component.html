@@ -1,99 +1,130 @@
-<clr-alert *ngIf="errorToken" [clrAlertType]="'danger'">
-  <clr-alert-item>
-    <span class="alert-text">
-      ERROR: No se ha podido crear un token para Gmail.
-      <br>
-      Haga clic en
-      <a [href]="rutaToken" target="_blank">
-        este vínculo para generar uno nuevo
-      </a>
-      , y vuelva a esta pestaña y recargue.
-    </span>
-  </clr-alert-item>
-</clr-alert>
-<div *ngIf="errores.length > 0">
-  <clr-alert clrAlertType="danger" *ngFor="let err of errores">
-    <clr-alert-item>
-      <strong>ERROR EN LA NOTIFICACIÓN:</strong>
-      {{err | json}}
-    </clr-alert-item>
-  </clr-alert>
-</div>
-<div *ngIf="generados > 0">
-  <clr-alert clrAlertType="success">
-    <clr-alert-item>Han sido generados {{generados}} certificados correctamente.</clr-alert-item>
-  </clr-alert>
-</div>
-<div *ngIf="notificados > 0">
-  <clr-alert clrAlertType="success">
-    <clr-alert-item>Han sido notificadas {{notificados}} personas correctamente.</clr-alert-item>
-  </clr-alert>
-</div>
-<p class="titulo">Calificaciones</p>
-<p class="instrucciones">Calificaciones de usuarios que no han sido certificados ni notificados aún.
-</p>
-<clr-datagrid [(clrDgSelected)]="calSel">
-  <clr-dg-action-bar>
-    <div class="btn-group btn-secundary btn-sm">
-      <button type="button" class="btn" (click)="exportar(data)">
-        <clr-icon shape="file"></clr-icon> Exportar todos a Excel
-      </button>
-      <button type="button" class="btn" *ngIf="calSel.length > 0" (click)="exportar(calSel)">
-        <clr-icon shape="checkbox-list"></clr-icon> Exportar seleccionados a Excel
-      </button>
-      <button type="button" class="btn" *ngIf="calSel.length > 0" (click)="modalNotificar = true">
-        <clr-icon shape="envelope"></clr-icon> Generar certificados y notificar
-      </button>
+<div class="content-container">
+  <div class="content-area">
+    <clr-alert *ngIf="errorToken"
+               [clrAlertType]="'danger'">
+      <clr-alert-item>
+        <span class="alert-text">
+          ERROR: No se ha podido crear un token para Gmail.
+          <br>
+          Haga clic en
+          <a [href]="rutaToken"
+             target="_blank">
+            este vínculo para generar uno nuevo
+          </a>
+          , y vuelva a esta pestaña y recargue.
+        </span>
+      </clr-alert-item>
+    </clr-alert>
+    <div *ngIf="errores.length > 0">
+      <clr-alert clrAlertType="danger"
+                 *ngFor="let err of errores">
+        <clr-alert-item>
+          <strong>ERROR EN LA NOTIFICACIÓN:</strong>
+          {{err | json}}
+        </clr-alert-item>
+      </clr-alert>
     </div>
-  </clr-dg-action-bar>
-  <clr-dg-column [clrDgField]="'nombres'">{{nombres.nombres}}</clr-dg-column>
-  <clr-dg-column [clrDgField]="'apellidos'">{{nombres.apellidos}}</clr-dg-column>
-  <clr-dg-column [clrDgField]="'email'">{{nombres.email}}</clr-dg-column>
-  <clr-dg-column [clrDgField]="'identificacion'">{{nombres.identificacion}}</clr-dg-column>
-  <clr-dg-column [clrDgField]="'coursename'">{{nombres.coursename}}</clr-dg-column>
-  <clr-dg-column [clrDgField]="'notaFinal'" [clrDgColType]="'number'">{{nombres.notaFinal}}
-  </clr-dg-column>
-  <clr-dg-column [clrDgField]="'fecha'">{{nombres.fecha}}</clr-dg-column>
-  <clr-dg-row *clrDgItems="let cal of data" [clrDgItem]="cal">
-    <clr-dg-cell>{{cal.nombres}}</clr-dg-cell>
-    <clr-dg-cell>{{cal.apellidos}}</clr-dg-cell>
-    <clr-dg-cell>{{cal.email}}</clr-dg-cell>
-    <clr-dg-cell>{{cal.identificacion}}</clr-dg-cell>
-    <clr-dg-cell>{{cal.coursename}}</clr-dg-cell>
-    <clr-dg-cell class="right">{{cal.notaFinal}}</clr-dg-cell>
-    <clr-dg-cell class="right">{{cal.fecha | date:'yyyy-MM-dd'}}</clr-dg-cell>
-  </clr-dg-row>
-  <clr-dg-footer>
-    <clr-dg-pagination #pagination [clrDgPageSize]="10">
-      <clr-dg-page-size [clrPageSizeOptions]="[10,20,50,100,200]">Registros por página
-      </clr-dg-page-size>
-      {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}} de {{pagination.totalItems}}
-      registros
-    </clr-dg-pagination>
-  </clr-dg-footer>
-</clr-datagrid>
-<clr-modal [(clrModalOpen)]="modalNotificar" [clrModalClosable]="!notificando">
-  <h3 class="modal-title">Generar certificados y notificar</h3>
-  <div class="modal-body" *ngIf="!notificando">
-    <p>
-      A continuación se generarán todos los certificados seleccionados y se enviará un email a cada participante para
-      notificarle sobre la expedición de dicho certificado y del vínculo desde donde pude descargarlo.
+    <div *ngIf="generados > 0">
+      <clr-alert clrAlertType="success">
+        <clr-alert-item>Han sido generados {{generados}} certificados correctamente.</clr-alert-item>
+      </clr-alert>
+    </div>
+    <div *ngIf="notificados > 0">
+      <clr-alert clrAlertType="success">
+        <clr-alert-item>Han sido notificadas {{notificados}} personas correctamente.</clr-alert-item>
+      </clr-alert>
+    </div>
+    <p class="titulo">Calificaciones</p>
+    <p class="instrucciones">Calificaciones de usuarios que no han sido certificados ni notificados aún.
     </p>
-    <p>
-      Haga clic en ACEPTAR para iniciar el proceso de generación y notificación de {{calSel.length}} certificados.
-    </p>
+    <clr-datagrid [(clrDgSelected)]="calSel">
+      <clr-dg-action-bar>
+        <div class="btn-group btn-secundary btn-sm">
+          <button type="button"
+                  class="btn"
+                  (click)="exportar(data)">
+            <clr-icon shape="file"></clr-icon> Exportar todos a Excel
+          </button>
+          <button type="button"
+                  class="btn"
+                  *ngIf="calSel.length > 0"
+                  (click)="exportar(calSel)">
+            <clr-icon shape="checkbox-list"></clr-icon> Exportar seleccionados a Excel
+          </button>
+          <button type="button"
+                  class="btn"
+                  *ngIf="calSel.length > 0"
+                  (click)="modalNotificar = true">
+            <clr-icon shape="envelope"></clr-icon> Generar certificados y notificar
+          </button>
+        </div>
+      </clr-dg-action-bar>
+      <clr-dg-column [clrDgField]="'nombres'">{{nombres.nombres}}</clr-dg-column>
+      <clr-dg-column [clrDgField]="'apellidos'">{{nombres.apellidos}}</clr-dg-column>
+      <clr-dg-column [clrDgField]="'email'">{{nombres.email}}</clr-dg-column>
+      <clr-dg-column [clrDgField]="'identificacion'">{{nombres.identificacion}}</clr-dg-column>
+      <clr-dg-column [clrDgField]="'coursename'">{{nombres.coursename}}</clr-dg-column>
+      <clr-dg-column [clrDgField]="'notaFinal'"
+                     [clrDgColType]="'number'">{{nombres.notaFinal}}
+      </clr-dg-column>
+      <clr-dg-column [clrDgField]="'fecha'">{{nombres.fecha}}</clr-dg-column>
+      <clr-dg-row *clrDgItems="let cal of data"
+                  [clrDgItem]="cal">
+        <clr-dg-cell>{{cal.nombres}}</clr-dg-cell>
+        <clr-dg-cell>{{cal.apellidos}}</clr-dg-cell>
+        <clr-dg-cell>{{cal.email}}</clr-dg-cell>
+        <clr-dg-cell>{{cal.identificacion}}</clr-dg-cell>
+        <clr-dg-cell>{{cal.coursename}}</clr-dg-cell>
+        <clr-dg-cell class="right">{{cal.notaFinal}}</clr-dg-cell>
+        <clr-dg-cell class="right">{{cal.fecha | date:'yyyy-MM-dd'}}</clr-dg-cell>
+      </clr-dg-row>
+      <clr-dg-footer>
+        <clr-dg-pagination #pagination
+                           [clrDgPageSize]="10">
+          <clr-dg-page-size [clrPageSizeOptions]="[10,20,50,100,200]">Registros por página
+          </clr-dg-page-size>
+          {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}} de {{pagination.totalItems}}
+          registros
+        </clr-dg-pagination>
+      </clr-dg-footer>
+    </clr-datagrid>
+    <clr-modal [(clrModalOpen)]="modalNotificar"
+               [clrModalClosable]="!notificando">
+      <h3 class="modal-title">Generar certificados y notificar</h3>
+      <div class="modal-body"
+           *ngIf="!notificando">
+        <p>
+          A continuación se generarán todos los certificados seleccionados y se enviará un email a cada participante
+          para
+          notificarle sobre la expedición de dicho certificado y del vínculo desde donde pude descargarlo.
+        </p>
+        <p>
+          Haga clic en ACEPTAR para iniciar el proceso de generación y notificación de {{calSel.length}} certificados.
+        </p>
+      </div>
+      <div class="modal-body"
+           *ngIf="notificando">
+        <p>Generando certificado y notificando a {{numNotif}} personas de {{calSel.length}}.</p>
+        <clr-progress-bar [clrValue]="porNotif"></clr-progress-bar>
+      </div>
+      <div class="modal-footer">
+        <button type="button"
+                class="btn btn-outline"
+                (click)="cerrarModal()"
+                *ngIf="!notificando">
+          Cancelar
+        </button>
+        <button type="button"
+                class="btn btn-primary"
+                (click)="cerrarModal()"
+                *ngIf="notificando && porNotif === 100">
+          Cerrar
+        </button>
+        <button type="button"
+                class="btn btn-primary"
+                (click)="notificar()"
+                *ngIf="!notificando">Aceptar</button>
+      </div>
+    </clr-modal>
   </div>
-  <div class="modal-body" *ngIf="notificando">
-    <p>Generando certificado y notificando a {{numNotif}} personas de {{calSel.length}}.</p>
-    <clr-progress-bar [clrValue]="porNotif"></clr-progress-bar>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-outline" (click)="cerrarModal()" *ngIf="!notificando">
-      Cancelar
-    </button>
-    <button type="button" class="btn btn-primary" (click)="cerrarModal()" *ngIf="notificando && porNotif === 100">
-      Cerrar
-    </button>
-    <button type="button" class="btn btn-primary" (click)="notificar()" *ngIf="!notificando">Aceptar</button>
-  </div>
-</clr-modal>
+</div>

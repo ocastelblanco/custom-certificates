@@ -6,7 +6,9 @@
         "league/oauth2-google": "^4.0",
         "google/apiclient": "^2.12.1",
         "setasign/fpdf": "1.8.*",
-        "setasign/fpdi": "^2.0"
+        "setasign/fpdi": "^2.0",
+        "monolog/monolog": "2.7.0",
+        "symfony/deprecation-contracts": "3.0.2"
     },
     "scripts": {
         "pre-autoload-dump": "Google\\Task\\Composer::cleanup"

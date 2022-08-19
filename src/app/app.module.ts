@@ -14,8 +14,10 @@ import { ConsultarComponent } from './consultar/consultar.component';
 import { LoginComponent } from './consultar/login/login.component';
 import { DescargarComponent } from './consultar/descargar/descargar.component';
 import { GenerarComponent } from './consultar/generar/generar.component';
-import { NotificarComponent } from './consultar/notificar/notificar.component';
 import { DragDropFileDirective } from './directivas/drag-drop-file.directive';
+import { UtilidadesComponent } from './consultar/utilidades/utilidades.component';
+import { NotificarComponent } from './consultar/utilidades/notificar/notificar.component';
+import { GeneradorComponent } from './consultar/utilidades/generador/generador.component';
 
 registerLocaleData(localeCo);
 
@@ -28,7 +30,9 @@ registerLocaleData(localeCo);
     DescargarComponent,
     GenerarComponent,
     NotificarComponent,
-    DragDropFileDirective
+    DragDropFileDirective,
+    UtilidadesComponent,
+    GeneradorComponent
   ],
   imports: [
     BrowserModule,

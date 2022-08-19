@@ -5,7 +5,9 @@ import { ValidarComponent } from './validar/validar.component';
 import { ConsultarComponent } from './consultar/consultar.component';
 import { DescargarComponent } from './consultar/descargar/descargar.component';
 import { GenerarComponent } from './consultar/generar/generar.component';
-import { NotificarComponent } from './consultar/notificar/notificar.component';
+import { UtilidadesComponent } from './consultar/utilidades/utilidades.component';
+import { NotificarComponent } from './consultar/utilidades/notificar/notificar.component';
+import { GeneradorComponent } from './consultar/utilidades/generador/generador.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'validar', pathMatch: 'full' },
@@ -14,7 +16,13 @@ const routes: Routes = [
     path: 'consultar', component: ConsultarComponent, children: [
       { path: 'descargar', component: DescargarComponent },
       { path: 'generar', component: GenerarComponent },
-      { path: 'notificar', component: NotificarComponent },
+      {
+        path: 'utilidades', component: UtilidadesComponent, children: [
+          { path: '', redirectTo: 'notificar', pathMatch: 'full' },
+          { path: 'notificar', component: NotificarComponent },
+          { path: 'generador', component: GeneradorComponent }
+        ]
+      },
     ]
   },
 ];

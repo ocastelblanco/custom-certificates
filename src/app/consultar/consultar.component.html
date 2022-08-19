@@ -4,7 +4,7 @@
            class="nav-link">
             <img src="assets/img/acg_logo.png"
                  alt="">
-            <span>Generador de certificados</span>
+            <span>Herramientas ACG</span>
         </a>
     </div>
     <div class="header-nav"
@@ -12,34 +12,30 @@
         <a routerLink="/consultar/descargar"
            class="nav-link nav-text"
            routerLinkActive="active">
-            Descargar
+            Descargar certificados
         </a>
         <a routerLink="/consultar/generar"
            class="nav-link nav-text"
            routerLinkActive="active"
            *ngIf="sesionActiva.admin">
-            Generar
+            Generar certificados
         </a>
-        <a routerLink="/consultar/notificar"
+        <a routerLink="/consultar/utilidades"
            class="nav-link nav-text"
            routerLinkActive="active"
            *ngIf="sesionActiva.admin">
-            Notificar
+            Utilidades
         </a>
     </div>
-    <div class="header-actions"
+    <!--div class="header-actions"
          *ngIf="sesionActiva">
         <a routerLink="/consultar"
            class="nav-link nav-icon"
            (click)="logout()">
             <clr-icon shape="logout"></clr-icon>
         </a>
-    </div>
+    </div-->
 </header>
-<div class="content-container">
-    <div class="content-area">
-        <!-- SESION ACTIVA: {{sesionActiva | json}} -->
-        <app-login *ngIf="!sesionActiva"></app-login>
-        <router-outlet *ngIf="sesionActiva"></router-outlet>
-    </div>
-</div>
+<!-- SESION ACTIVA: {{sesionActiva | json}} -->
+<!-- <app-login *ngIf="!sesionActiva"></app-login> -->
+<router-outlet *ngIf="sesionActiva"></router-outlet>

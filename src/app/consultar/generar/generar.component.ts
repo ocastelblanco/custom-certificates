@@ -19,7 +19,7 @@ export class GenerarComponent implements OnInit {
     identificacion: '# Identidad',
     coursename: 'Curso',
     notaFinal: 'Nota',
-    fecha: 'Última fecha'
+    fecha: 'Fecha de evaluación'
   };
   modalNotificar: boolean = false;
   notificando: boolean = false;
