@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ApiService, Notificacion } from 'src/app/servicios/api.service';
+import { ApiService, Curso, Notificacion } from 'src/app/servicios/api.service';
 import { ExcelService } from 'src/app/servicios/excel.service';
 import { environment } from 'src/environments/environment';
 
@@ -9,23 +9,6 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./notificar.component.scss']
 })
 export class NotificarComponent implements OnInit {
-  nombresCursos: any = {
-    "ACG Calidad - Campus Virtual": "ACG CALIDAD",
-    "EM_calidad_analitica": "CURSO VIRTUAL GESTIÓN ANALÍTICA EN EL LABORATORIO CLÍNICO",
-    "EM_paciente_seguro": "CURSO VIRTUAL HERRAMIENTAS PRÁCTICAS PARA LA IMPLEMENTACIÓN, MONITOREO Y MEJORAMIENTO DEL PROGRAMA DE SEGURIDAD DEL PACIENTE",
-    "EM_gestion_riesgo": "CURSO VIRTUAL GESTIÓN DEL RIESGO APLICADO EN EL LABORATORIO CLINICO",
-    "EM_seis_sigma": "CURSO VIRTUAL IMPLEMENTE LA ESTRATEGIA SEIS SIGMA EN EL LABORATORIO CLINICO",
-    "EM_bioseguridad-covid19": "CURSO VIRTUAL IMPLEMENTACIÓN DE PROTOCOLOS DE BIOSEGURIDAD PARA LABORATORIOS CLÍNICOS DURANTE LA PANDEMIA COVID-19",
-    "bioseguridad-covid19": "CURSO VIRTUAL IMPLEMENTACIÓN DE PROTOCOLOS DE BIOSEGURIDAD PARA LABORATORIOS CLÍNICOS DURANTE LA PANDEMIA COVID-19",
-    "EMI_diplo_calidad": "DIPLOMADO DE CALIDAD",
-    "EMI_diplo_calidad_2020-11-05": "DIPLOMADO DE CALIDAD NOV 2020",
-    "EMI_diplo_calidad_2021-02-22": "DIPLOMADO DE CALIDAD FEB 2021",
-    "EMI_diplo_calidad_2021-08": "DIPLOMADO DE CALIDAD AGO 2021",
-    "EM_seis_sigma_julio-2021": "SEIS SIGMA JULIO 2021",
-    "EMI_poct_no_bact": "CURSO VIRTUAL POCT PARA NO BACTERIÓLOGOS",
-    "EM_salud_trabajo": "CURSO VIRTUAL SISTEMAS DE GESTIÓN Y SEGURIDAD EN SALUD EN EL TRABAJO",
-    "SEM_Diplom_Calidad": "Semilla DIPLOMADO DE CALIDAD"
-  };
   archivoCargado: boolean = false;
   data: any[] = [];
   notifSel: any[] = [];
@@ -35,7 +18,7 @@ export class NotificarComponent implements OnInit {
   porNotif: number = 0;
   errorToken: boolean = false;
   rutaToken: string = environment.ruta_api + 'assets/api/generaToken.php';
-  tiposNotif: Array<{ tipo: string, label: string }> = [
+  tiposNotif: Array<{ tipo: string, label: string; }> = [
     { tipo: 'registro', label: 'Registro en plataforma' },
     { tipo: 'certificado', label: 'Generación de certificado' },
   ];
@@ -71,7 +54,7 @@ export class NotificarComponent implements OnInit {
     }
   }
   notificarCertificado(): void {
-    this.notifSel.forEach((participante: { nombre: string, email: string, curso: string }) => {
+    this.notifSel.forEach((participante: { nombre: string, email: string, curso: string; }) => {
       const notificacion: Notificacion = {
         nombre: participante.nombre,
         correo: participante.email,
@@ -129,31 +112,23 @@ export class NotificarComponent implements OnInit {
           fila[encabezado] = filaRaw[pos];
         });
         fila.cursos = [];
-        if (fila.course1 == 'EM_seis_sigma' && fila.course2 == 'EM_calidad_analitica') {
+        if (fila.course1 != '') {
           fila.cursos.push({
-            curso: 'CURSO INTEGRADO DE CONTROL DE CALIDAD',
+            curso: this.api.cursos.find((curso: Curso) => curso.corto == fila.course1)?.largo,
             inicio: new Date(new Date(fila.enroltimestart1).getTime() + dia).toLocaleDateString('co-ES', dateOp),
             fin: new Date(new Date(fila.enroltimestart1).getTime() + (parseInt(fila.enrolperiod1) * dia)).toLocaleDateString('co-ES', dateOp),
           });
-        } else {
-          if (fila.course1 != '') {
-            fila.cursos.push({
-              curso: this.nombresCursos[fila.course1],
-              inicio: new Date(new Date(fila.enroltimestart1).getTime() + dia).toLocaleDateString('co-ES', dateOp),
-              fin: new Date(new Date(fila.enroltimestart1).getTime() + (parseInt(fila.enrolperiod1) * dia)).toLocaleDateString('co-ES', dateOp),
-            });
-          }
-          if (fila.course2 != '') {
-            fila.cursos.push({
-              curso: this.nombresCursos[fila.course2],
-              inicio: new Date(new Date(fila.enroltimestart2).getTime() + dia).toLocaleDateString('co-ES', dateOp),
-              fin: new Date(new Date(fila.enroltimestart2).getTime() + (parseInt(fila.enrolperiod2) * dia)).toLocaleDateString('co-ES', dateOp),
-            });
-          }
+        }
+        if (fila.course2 != '') {
+          fila.cursos.push({
+            curso: this.api.cursos.find((curso: Curso) => curso.corto == fila.course2)?.largo,
+            inicio: new Date(new Date(fila.enroltimestart2).getTime() + dia).toLocaleDateString('co-ES', dateOp),
+            fin: new Date(new Date(fila.enroltimestart2).getTime() + (parseInt(fila.enrolperiod2) * dia)).toLocaleDateString('co-ES', dateOp),
+          });
         }
         if (fila.course3 != '') {
           fila.cursos.push({
-            curso: this.nombresCursos[fila.course3],
+            curso: this.api.cursos.find((curso: Curso) => curso.corto == fila.course3)?.largo,
             inicio: new Date(new Date(fila.enroltimestart3).getTime() + dia).toLocaleDateString('co-ES', dateOp),
             fin: new Date(new Date(fila.enroltimestart3).getTime() + (parseInt(fila.enrolperiod3) * dia)).toLocaleDateString('co-ES', dateOp),
           });

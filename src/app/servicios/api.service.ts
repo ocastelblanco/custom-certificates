@@ -33,9 +33,10 @@ export interface ErrorEnvio {
   error: string;
 }
 export interface Curso {
-  corto: string[];
+  corto: string;
   comun: string;
   largo: string;
+  intensidad: string;
   claves: string[];
 }
 
@@ -79,51 +80,12 @@ export class ApiService {
   Grupo Capacitación ACG
   `;
   private asunto: string = 'Certificado de curso virtual en ACG Calidad';
-  cursos: Curso[] = [
-    {
-      corto: ['EM_seis_sigma'],
-      comun: 'Seis Sigma',
-      largo: 'CURSO VIRTUAL IMPLEMENTE LA ESTRATEGIA SEIS SIGMA EN EL LABORATORIO CLINICO',
-      claves: ['sigma', 'seis']
-    },
-    {
-      corto: ['EM_calidad_analitica'],
-      comun: 'Calidad Analítica',
-      largo: 'CURSO VIRTUAL GESTIÓN ANALÍTICA EN EL LABORATORIO CLÍNICO',
-      claves: ['calidad', 'analítica']
-    },
-    {
-      corto: ['EM_paciente_seguro'],
-      comun: 'Seguridad del Paciente',
-      largo: 'CURSO VIRTUAL HERRAMIENTAS PRÁCTICAS PARA LA IMPLEMENTACIÓN, MONITOREO Y MEJORAMIENTO DEL PROGRAMA DE SEGURIDAD DEL PACIENTE',
-      claves: ['seguridad', 'seguro', 'paciente']
-    },
-    {
-      corto: ['EM_gestion_riesgo'],
-      comun: 'Gestión del Riesgo',
-      largo: 'CURSO VIRTUAL GESTIÓN DEL RIESGO APLICADO EN EL LABORATORIO CLINICO',
-      claves: ['riesgo']
-    },
-    {
-      corto: ['EM_bioseguridad-covid19'],
-      comun: 'Bioseguridad',
-      largo: 'CURSO VIRTUAL IMPLEMENTACIÓN DE PROTOCOLOS DE BIOSEGURIDAD PARA LABORATORIOS CLÍNICOS DURANTE LA PANDEMIA COVID-19',
-      claves: ['bioseguridad', 'covid']
-    },
-    {
-      corto: ['EMI_poct_no_bact'],
-      comun: 'POCT para no bacteriólogos',
-      largo: 'CURSO VIRTUAL POCT PARA NO BACTERIÓLOGOS',
-      claves: ['poct', 'bacteri']
-    },
-    {
-      corto: ['EM_seis_sigma', 'EM_calidad_analitica'],
-      comun: 'Integrado de Calidad',
-      largo: 'CURSO VIRTUAL INTEGRADO DE CALIDAD',
-      claves: ['integra']
-    },
-  ];
+  cursos: Curso[] = [];
   constructor(private http: HttpClient) { }
+  init(): Observable<Curso[]> {
+    return this.http.get<Curso[]>('assets/data/cursos.json', { responseType: 'json' });
+    //.subscribe((cursos: Curso[]) => this.cursos = cursos);
+  }
   list(id: string): Observable<any> {
     return this.http.get(environment.ruta_api + 'assets/api/list.php?id=' + id, { responseType: 'json' });
   }

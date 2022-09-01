@@ -1,0 +1,71 @@
+[
+  {
+    "corto": "EM_seis_sigma",
+    "comun": "Seis Sigma",
+    "largo": "CURSO VIRTUAL IMPLEMENTE LA ESTRATEGIA SEIS SIGMA EN EL LABORATORIO CLINICO",
+    "intensidad": "40",
+    "claves": [
+      "sigma",
+      "seis"
+    ]
+  },
+  {
+    "corto": "EM_calidad_analitica",
+    "comun": "Calidad Analítica",
+    "largo": "CURSO VIRTUAL GESTIÓN ANALÍTICA EN EL LABORATORIO CLÍNICO",
+    "intensidad": "40",
+    "claves": [
+      "calidad",
+      "analítica"
+    ]
+  },
+  {
+    "corto": "EM_paciente_seguro",
+    "comun": "Seguridad del Paciente",
+    "largo": "CURSO VIRTUAL HERRAMIENTAS PRÁCTICAS PARA LA IMPLEMENTACIÓN, MONITOREO Y MEJORAMIENTO DEL PROGRAMA DE SEGURIDAD DEL PACIENTE",
+    "intensidad": "40",
+    "claves": [
+      "seguridad",
+      "seguro",
+      "paciente"
+    ]
+  },
+  {
+    "corto": "EM_gestion_riesgo",
+    "comun": "Gestión del Riesgo",
+    "largo": "CURSO VIRTUAL GESTIÓN DEL RIESGO APLICADO EN EL LABORATORIO CLINICO",
+    "intensidad": "40",
+    "claves": [
+      "riesgo"
+    ]
+  },
+  {
+    "corto": "EM_bioseguridad-covid19",
+    "comun": "Bioseguridad",
+    "largo": "CURSO VIRTUAL IMPLEMENTACIÓN DE PROTOCOLOS DE BIOSEGURIDAD PARA LABORATORIOS CLÍNICOS DURANTE LA PANDEMIA COVID-19",
+    "intensidad": "40",
+    "claves": [
+      "bioseguridad",
+      "covid"
+    ]
+  },
+  {
+    "corto": "EMI_poct_no_bact",
+    "comun": "POCT para no bacteriólogos",
+    "largo": "CURSO VIRTUAL POCT PARA NO BACTERIÓLOGOS",
+    "intensidad": "40",
+    "claves": [
+      "poct",
+      "bacteri"
+    ]
+  },
+  {
+    "corto": "EM_integrado_calidad",
+    "comun": "Integrado de Calidad",
+    "largo": "CURSO VIRTUAL INTEGRADO DE CALIDAD",
+    "intensidad": "80",
+    "claves": [
+      "integra"
+    ]
+  }
+]
