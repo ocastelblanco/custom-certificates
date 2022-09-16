@@ -4,6 +4,7 @@
     "comun": "Seis Sigma",
     "largo": "CURSO VIRTUAL IMPLEMENTE LA ESTRATEGIA SEIS SIGMA EN EL LABORATORIO CLINICO",
     "intensidad": "40",
+    "plazo": "31",
     "claves": [
       "sigma",
       "seis"
@@ -14,6 +15,7 @@
     "comun": "Calidad Analítica",
     "largo": "CURSO VIRTUAL GESTIÓN ANALÍTICA EN EL LABORATORIO CLÍNICO",
     "intensidad": "40",
+    "plazo": "31",
     "claves": [
       "calidad",
       "analítica"
@@ -24,6 +26,7 @@
     "comun": "Seguridad del Paciente",
     "largo": "CURSO VIRTUAL HERRAMIENTAS PRÁCTICAS PARA LA IMPLEMENTACIÓN, MONITOREO Y MEJORAMIENTO DEL PROGRAMA DE SEGURIDAD DEL PACIENTE",
     "intensidad": "40",
+    "plazo": "31",
     "claves": [
       "seguridad",
       "seguro",
@@ -35,6 +38,7 @@
     "comun": "Gestión del Riesgo",
     "largo": "CURSO VIRTUAL GESTIÓN DEL RIESGO APLICADO EN EL LABORATORIO CLINICO",
     "intensidad": "40",
+    "plazo": "31",
     "claves": [
       "riesgo"
     ]
@@ -44,6 +48,7 @@
     "comun": "Bioseguridad",
     "largo": "CURSO VIRTUAL IMPLEMENTACIÓN DE PROTOCOLOS DE BIOSEGURIDAD PARA LABORATORIOS CLÍNICOS DURANTE LA PANDEMIA COVID-19",
     "intensidad": "40",
+    "plazo": "31",
     "claves": [
       "bioseguridad",
       "covid"
@@ -54,6 +59,7 @@
     "comun": "POCT para no bacteriólogos",
     "largo": "CURSO VIRTUAL POCT PARA NO BACTERIÓLOGOS",
     "intensidad": "40",
+    "plazo": "31",
     "claves": [
       "poct",
       "bacteri"
@@ -64,6 +70,7 @@
     "comun": "Integrado de Calidad",
     "largo": "CURSO VIRTUAL INTEGRADO DE CALIDAD",
     "intensidad": "80",
+    "plazo": "62",
     "claves": [
       "integra"
     ]

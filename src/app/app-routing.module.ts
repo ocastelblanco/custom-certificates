@@ -14,6 +14,7 @@ const routes: Routes = [
   { path: 'validar', component: ValidarComponent },
   {
     path: 'consultar', component: ConsultarComponent, children: [
+      { path: '', redirectTo: 'descargar', pathMatch: 'full' },
       { path: 'descargar', component: DescargarComponent },
       { path: 'generar', component: GenerarComponent },
       {

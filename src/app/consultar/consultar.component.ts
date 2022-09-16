@@ -16,7 +16,7 @@ export class ConsultarComponent implements OnInit {
       this.api.cursos = cursos;
       this.sesion.sesion().subscribe(s => {
         this.sesionActiva = s;
-        //*
+        /*
         this.sesionActiva = {
           id: '1',
           idnumber: '1',
@@ -29,9 +29,13 @@ export class ConsultarComponent implements OnInit {
           admin: true,
           sesionid: '1'
         };
-        this.route.navigateByUrl('/consultar/utilidades');
+        // this.route.navigateByUrl('/consultar/utilidades');
         //*/
-        if (!this.sesionActiva) this.route.navigateByUrl('/');
+        if (!this.sesionActiva) {
+          this.route.navigateByUrl('/');
+        } else {
+          this.route.navigateByUrl('/consultar');
+        }
       });
     });
   }

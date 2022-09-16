@@ -2,7 +2,77 @@
   <div class="clr-col-12">
     <div class="archivo-no-cargado"
          *ngIf="archivoCargado && !convirtiendo">
-      {{data | json}}
+      <clr-datagrid *ngIf="data.length > 0"
+                    [(clrDgSelected)]="partSel">
+        <clr-dg-action-bar>
+          <div class="btn-group btn-secundary btn-sm">
+            <button type="button"
+                    class="btn"
+                    (click)="descargarCSV()"
+                    *ngIf="partSel.length > 0">
+              <clr-icon shape="download"></clr-icon> Descargar archivo de carga
+            </button>
+          </div>
+        </clr-dg-action-bar>
+        <clr-dg-column [clrDgField]="'firstname'">firstname</clr-dg-column>
+        <clr-dg-column [clrDgField]="'lastname'">lastname</clr-dg-column>
+        <clr-dg-column [clrDgField]="'username'">username</clr-dg-column>
+        <clr-dg-column [clrDgField]="'password'">password</clr-dg-column>
+        <clr-dg-column [clrDgField]="'email'">email</clr-dg-column>
+        <clr-dg-column [clrDgField]="'institution'">institution</clr-dg-column>
+        <clr-dg-column [clrDgField]="'city'">city</clr-dg-column>
+        <clr-dg-column [clrDgField]="'country'">country</clr-dg-column>
+        <clr-dg-column [clrDgField]="'course1'">course1</clr-dg-column>
+        <clr-dg-column [clrDgField]="'enroltimestart1'">enroltimestart1</clr-dg-column>
+        <clr-dg-column [clrDgField]="'enrolperiod1'">enrolperiod1</clr-dg-column>
+        <ng-container *ngIf="siCurso('2')">
+          <clr-dg-column [clrDgField]="'course2'">course2</clr-dg-column>
+          <clr-dg-column [clrDgField]="'enroltimestart2'">enroltimestart2</clr-dg-column>
+          <clr-dg-column [clrDgField]="'enrolperiod2'">enrolperiod2</clr-dg-column>
+        </ng-container>
+        <ng-container *ngIf="siCurso('3')">
+          <clr-dg-column [clrDgField]="'course3'">course3</clr-dg-column>
+          <clr-dg-column [clrDgField]="'enroltimestart3'">enroltimestart3</clr-dg-column>
+          <clr-dg-column [clrDgField]="'enrolperiod3'">enrolperiod3</clr-dg-column>
+        </ng-container>
+        <clr-dg-column [clrDgField]="'cohort1'">cohort1</clr-dg-column>
+        <clr-dg-column [clrDgField]="'idnumber'">idnumber</clr-dg-column>
+        <clr-dg-row *clrDgItems="let usuario of data"
+                    [clrDgItem]="usuario">
+          <clr-dg-cell>{{usuario.firstname}}</clr-dg-cell>
+          <clr-dg-cell>{{usuario.lastname}}</clr-dg-cell>
+          <clr-dg-cell>{{usuario.username}}</clr-dg-cell>
+          <clr-dg-cell>{{usuario.password}}</clr-dg-cell>
+          <clr-dg-cell>{{usuario.email}}</clr-dg-cell>
+          <clr-dg-cell>{{usuario.institution}}</clr-dg-cell>
+          <clr-dg-cell>{{usuario.city}}</clr-dg-cell>
+          <clr-dg-cell>{{usuario.country}}</clr-dg-cell>
+          <clr-dg-cell>{{usuario.course1}}</clr-dg-cell>
+          <clr-dg-cell>{{usuario.enroltimestart1}}</clr-dg-cell>
+          <clr-dg-cell>{{usuario.enrolperiod1}}</clr-dg-cell>
+          <ng-container *ngIf="siCurso('2')">
+            <clr-dg-cell>{{usuario.course2}}</clr-dg-cell>
+            <clr-dg-cell>{{usuario.enroltimestart2}}</clr-dg-cell>
+            <clr-dg-cell>{{usuario.enrolperiod2}}</clr-dg-cell>
+          </ng-container>
+          <ng-container *ngIf="siCurso('3')">
+            <clr-dg-cell>{{usuario.course3}}</clr-dg-cell>
+            <clr-dg-cell>{{usuario.enroltimestart3}}</clr-dg-cell>
+            <clr-dg-cell>{{usuario.enrolperiod3}}</clr-dg-cell>
+          </ng-container>
+          <clr-dg-cell>{{usuario.cohort1}}</clr-dg-cell>
+          <clr-dg-cell>{{usuario.idnumber}}</clr-dg-cell>
+        </clr-dg-row>
+        <clr-dg-footer>
+          <clr-dg-pagination #pagination
+                             [clrDgPageSize]="10">
+            <clr-dg-page-size [clrPageSizeOptions]="[10,20,50,100,200]">Registros por página
+            </clr-dg-page-size>
+            {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}} de {{pagination.totalItems}}
+            registros
+          </clr-dg-pagination>
+        </clr-dg-footer>
+      </clr-datagrid>
     </div>
     <div class="archivo-cargado"
          *ngIf="!archivoCargado && !convirtiendo">
@@ -32,3 +102,21 @@
     </div>
   </div>
 </div>
+<clr-modal [(clrModalOpen)]="modalDescargarCSV">
+  <h3 class="modal-title">Descargar archivo de carga Moodle</h3>
+  <div class="modal-body">
+    <p>
+      Descargue el archivo CSV de carga en Moodle del siguiente vínculo:
+    </p>
+    <p>
+      <a href="">Esta funcionalidad no está implementada aún</a>
+    </p>
+  </div>
+  <div class="modal-footer">
+    <button type="button"
+            class="btn btn-primary"
+            (click)="modalDescargarCSV = false">
+      Cerrar
+    </button>
+  </div>
+</clr-modal>

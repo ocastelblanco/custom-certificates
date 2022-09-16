@@ -37,7 +37,29 @@ export interface Curso {
   comun: string;
   largo: string;
   intensidad: string;
+  plazo: string;
   claves: string[];
+}
+export interface Participante {
+  firstname: string;
+  lastname: string;
+  username: string;
+  password: string;
+  email: string;
+  institution: string;
+  city: string;
+  country: string;
+  course1: string;
+  enroltimestart1: string;
+  enrolperiod1: string;
+  course2?: string;
+  enroltimestart2?: string;
+  enrolperiod2?: string;
+  course3?: string;
+  enroltimestart3?: string;
+  enrolperiod3?: string;
+  cohort1: string;
+  idnumber: string;
 }
 
 @Injectable({
@@ -122,5 +144,8 @@ export class ApiService {
     const postData: FormData = new FormData();
     Object.keys(data).forEach((k, i) => postData.append(k, String(Object.values(data)[i])));
     return this.http.post(environment.ruta_api + 'assets/api/notificar.php', postData, { responseType: 'json' });
+  }
+  dosDigitos(numero: number): string {
+    return numero < 10 ? '0' + numero : '' + numero;
   }
 }

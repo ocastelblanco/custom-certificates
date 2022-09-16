@@ -1,6 +1,10 @@
 <div class="content-container">
+  <div class="precarga"
+       *ngIf="precarga">
+    <clr-spinner clrInverse>Cargando datos...</clr-spinner>
+  </div>
   <div class="content-area">
-    <clr-alert *ngIf="errorToken"
+    <clr-alert *ngIf="errorToken && sesion.perfil && sesion.perfil.admin"
                [clrAlertType]="'danger'">
       <clr-alert-item>
         <span class="alert-text">

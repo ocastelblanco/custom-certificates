@@ -36,6 +36,7 @@ export class DescargarComponent implements OnInit {
   notificados: number = 0;
   errorToken: boolean = false;
   rutaToken: string = environment.ruta_api + 'assets/api/generaToken.php';
+  precarga: boolean = false;
   constructor(
     public sesion: SesionService,
     private api: ApiService,
@@ -44,7 +45,11 @@ export class DescargarComponent implements OnInit {
     private excel: ExcelService
   ) { }
   ngOnInit(): void {
-    this.generaData();
+    this.precarga = true;
+    window.setTimeout(() => {
+      this.precarga = false;
+      this.generaData();
+    }, 3000);
     this.api.generaToken().subscribe(res => {
       if (!res.token) this.errorToken = true;
     });
