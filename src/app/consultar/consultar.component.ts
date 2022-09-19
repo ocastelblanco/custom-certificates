@@ -16,7 +16,7 @@ export class ConsultarComponent implements OnInit {
       this.api.cursos = cursos;
       this.sesion.sesion().subscribe(s => {
         this.sesionActiva = s;
-        /*
+        //*
         this.sesionActiva = {
           id: '1',
           idnumber: '1',

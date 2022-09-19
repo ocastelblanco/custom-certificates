@@ -61,6 +61,10 @@ export interface Participante {
   cohort1: string;
   idnumber: string;
 }
+export interface Pais {
+  nombre: string;
+  codigo: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -103,8 +107,10 @@ export class ApiService {
   `;
   private asunto: string = 'Certificado de curso virtual en ACG Calidad';
   cursos: Curso[] = [];
+  paises: Pais[] = [];
   constructor(private http: HttpClient) { }
   init(): Observable<Curso[]> {
+    this.http.get<Pais[]>('assets/data/paises.json', { responseType: 'json' }).subscribe((p: Pais[]) => this.paises = p);
     return this.http.get<Curso[]>('assets/data/cursos.json', { responseType: 'json' });
     //.subscribe((cursos: Curso[]) => this.cursos = cursos);
   }

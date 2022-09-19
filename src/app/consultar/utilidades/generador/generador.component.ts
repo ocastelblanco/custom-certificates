@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ApiService, Curso, Participante } from 'src/app/servicios/api.service';
+import { ApiService, Curso, Pais, Participante } from 'src/app/servicios/api.service';
 import { ExcelService } from 'src/app/servicios/excel.service';
 
 @Component({
@@ -12,9 +12,41 @@ export class GeneradorComponent implements OnInit {
   convirtiendo: boolean = false;
   archivoCargado: boolean = false;
   partSel: Participante[] = [];
-  modalDescargarCSV: boolean = false;
+  listaCursos: { corto: string, comun: string; }[] = [];
+  listaPaises: Pais[] = this.api.paises;
+  campos: string[] = [
+    "firstname",
+    "lastname",
+    "username",
+    "password",
+    "email",
+    "institution",
+    "city",
+    "country",
+    "course1",
+    "enroltimestart1",
+    "enrolperiod1",
+    "course2",
+    "enroltimestart2",
+    "enrolperiod2",
+    "course3",
+    "enroltimestart3",
+    "enrolperiod3",
+    "cohort1",
+    "idnumber",
+  ];
+  campoNoEdit: number[] = [2, 3];
+  campoArea: number[] = [0, 1, 5, 6, 18];
+  campoEmail: number[] = [4];
+  campoFecha: number[] = [9, 12, 15, 17];
+  campoNum: number[] = [10, 13, 16];
+  campoCurso: number[] = [8, 11, 14];
+  campoPais: number[] = [7];
+  campoOrigen: number[] = [4, 18];
   constructor(private api: ApiService, private excel: ExcelService) { }
   ngOnInit(): void {
+    this.listaCursos = [];
+    this.api.cursos.forEach((c: Curso) => this.listaCursos.push({ corto: c.corto, comun: c.comun }));
   }
   sueltaArchivo(archivo: File): void {
     this.archivoCargado = true;
@@ -71,9 +103,17 @@ export class GeneradorComponent implements OnInit {
   creaPassword(email: string): string {
     return email.replace(/(.*)@.*/, '$1');
   }
-  generaFecha(): string {
-    const hoy: Date = new Date(Date.now());
-    return hoy.getFullYear() + '-' + this.api.dosDigitos(hoy.getMonth() + 1) + '-' + this.api.dosDigitos(hoy.getDate());
+  generaFecha(date: string = '', s: string = '/'): string {
+    const d: string[] = date.split('/') ?? [];
+    const f: Date = new Date(d.length > 1 ? Date.parse(d[2] + '-' + d[1] + '-' + d[0]) : Date.now());
+    switch (s) {
+      case '/':
+        return this.api.dosDigitos(f.getDate()) + s + this.api.dosDigitos(f.getMonth() + 1) + s + f.getFullYear();
+      case '-':
+        return f.getFullYear() + s + this.api.dosDigitos(f.getMonth() + 1) + s + this.api.dosDigitos(f.getDate());
+      default:
+        return '';
+    }
   }
   unificaCursos(data: Participante[]): Participante[] {
     const salida: Participante[] = [];
@@ -95,10 +135,29 @@ export class GeneradorComponent implements OnInit {
     });
     return salida;
   }
-  siCurso(num: string): boolean {
-    return this.data.find((part: Participante) => num == '2' ? part.course2 : part.course3) != undefined;
+  siCurso(c: string): boolean {
+    const n: string = c.substring(c.length - 1);
+    if (n != '2' && n != '3') return true;
+    let s: boolean = false;
+    this.data.forEach((p: Participante) => (n == '2' && p.course2) || (n == '3' && p.course3) ? s = true : null);
+    return s;
   }
   descargarCSV(): void {
-    this.modalDescargarCSV = true;
+    const fecha: string = this.generaFecha('', '-');
+    const csv: Participante[] = JSON.parse(JSON.stringify(this.partSel));
+    csv.forEach((p: Participante) => {
+      p.cohort1 = this.generaFecha(p.cohort1, '-');
+      p.enroltimestart1 = this.generaFecha(p.enroltimestart1, '-');
+      if (p.enroltimestart2) p.enroltimestart2 = this.generaFecha(p.enroltimestart2, '-');
+      if (p.enroltimestart3) p.enroltimestart3 = this.generaFecha(p.enroltimestart3, '-');
+    });
+    this.excel.exportAsCSV(csv, 'CargaParticipantes_' + fecha);
+  }
+  editaCampoOrigen(fil: number, col: number): void {
+    if (this.campoOrigen.includes(col)) {
+      const fila: any = this.data[fil];
+      fila[this.campos[2]] = fila[this.campos[18]];
+      fila[this.campos[3]] = this.creaPassword(fila[this.campos[4]]);
+    }
   }
 }

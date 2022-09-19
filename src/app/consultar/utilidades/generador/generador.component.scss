@@ -37,3 +37,9 @@
   left: 0;
   background-color: rgba(0, 0, 0, 0.4);
 }
+.editable {
+  cursor: context-menu;
+}
+.no-editable {
+  cursor: not-allowed;
+}

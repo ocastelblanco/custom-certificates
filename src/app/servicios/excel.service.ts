@@ -34,7 +34,13 @@ export class ExcelService {
     //FileSaver.saveAs(data, fileName + '_' + new Date().getTime() + EXCEL_EXTENSION);
     FileSaver.saveAs(data, fileName + EXCEL_EXTENSION);
   }
-  readExcelFile(archivo: File): Observable<any> {
+  public exportAsCSV(json: any[], nombre: string, excluirEncabezado = false) {
+    const hoja: XLSX.WorkSheet = XLSX.utils.json_to_sheet(json, { skipHeader: excluirEncabezado });
+    const data: string = XLSX.utils.sheet_to_csv(hoja);
+    const blob: Blob = new Blob([data], { type: 'text/csv;charset=UTF-8' });
+    FileSaver.saveAs(blob, nombre + '.csv');
+  }
+  public readExcelFile(archivo: File): Observable<any> {
     const salida: Observable<any> = new Observable<any>(observer => {
       const reader: FileReader = new FileReader();
       reader.readAsArrayBuffer(archivo);
