@@ -79,8 +79,8 @@ export class ApiService {
     <body>
       <p>Estimado(a) Doctor(a) <strong>{{nombre}}</strong>:</p>
       <p>De parte del Grupo de Capacitación de ACG Calidad le queremos agradecer su participación en nuestro curso virtual <strong>{{curso}}</strong>.</p>
-      <p>Ingrese a <a href="http://aulavirtual.acgcalidad.co/" target="_blank">nuestro Campus Virtual</a> (con el mismo usuario y contraseña de siempre) y haga clic sobre el vínculo <strong>OBTENER CERTIFICADO</strong> que se encuentra al inicio de la página principal.</p>
-      <p>Si tiene alguna duda, puede consultar <a href="https://youtu.be/Gq-UkAvsFOo" target="_blank">nuestro instructivo en video</a>.</p>
+      <p>Ingrese a <a href="https://aulavirtual.acgcalidad.co/" target="_blank">nuestro Campus Virtual</a> (con el mismo usuario y contraseña de siempre) y haga clic sobre el vínculo <strong>OBTENER CERTIFICADO</strong> que se encuentra al inicio de la página principal.</p>
+      <p>Si tiene alguna duda, puede consultar <a href="https://youtu.be/HLeUMs9cjvk" target="_blank">nuestro instructivo en video</a>.</p>
       <p>Atentamente,</p>
       <br>
       <p>
@@ -96,9 +96,9 @@ export class ApiService {
 
   De parte del Grupo de Capacitación de ACG Calidad le queremos agradecer su participación en nuestro curso virtual {{curso}}.
 
-  Ingrese a nuestro Campus Virtual con el mismo usuario y contraseña de siempre, http://aulavirtual.acgcalidad.co, y haga clic sobre el vínculo OBTENER CERTIFICADO que se encuentra al inicio de la página principal.
+  Ingrese a nuestro Campus Virtual con el mismo usuario y contraseña de siempre, https://aulavirtual.acgcalidad.co, y haga clic sobre el vínculo OBTENER CERTIFICADO que se encuentra al inicio de la página principal.
 
-  Si tiene alguna duda, puede consultar nuestro instructivo en video https://youtu.be/Gq-UkAvsFOo.
+  Si tiene alguna duda, puede consultar nuestro instructivo en video https://youtu.be/HLeUMs9cjvk.
 
   Atentamente,
 

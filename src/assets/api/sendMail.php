@@ -26,11 +26,6 @@ if (
   $altbody = preg_replace("/{{nombre}}/", $nombre, $contenidoALT);
   $altbody = preg_replace("/{{curso}}/", $curso, $altbody);
 
-  /* -------------- TEMPORAL PARA LA URL ACTUAL -------------- */
-  $cambio_URL = "http://www.acgcalidadeducacion.com/campus_virtual/";
-  $contenido = preg_replace("/http:\/\/aulavirtual.acgcalidad.co/", $cambio_URL, $contenido);
-  $altbody = preg_replace("/http:\/\/aulavirtual.acgcalidad.co/", $cambio_URL, $altbody);
-
   $dirAdjunto = __DIR__ . "/certificados";
 
   //$email = "ocastelblanco@gmail.com";
