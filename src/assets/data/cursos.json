@@ -139,5 +139,16 @@
     "claves": [
       "julio"
     ]
+  },
+  {
+    "id": "7",
+    "corto": "bioseguridad-covid19",
+    "comun": "Bioseguridad - semilla",
+    "largo": "IMPLEMENTACIÓN DE PROTOCOLOS DE BIOSEGURIDAD PARA LABORATORIOS CLÍNICOS DURANTE LA PANDEMIA COVID-19",
+    "intensidad": "40",
+    "plazo": "31",
+    "claves": [
+      "semilla"
+    ]
   }
 ]

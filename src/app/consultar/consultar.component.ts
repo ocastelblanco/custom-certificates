@@ -29,7 +29,7 @@ export class ConsultarComponent implements OnInit {
           admin: true,
           sesionid: '1'
         };
-        // this.route.navigateByUrl('/consultar/utilidades');
+        this.route.navigateByUrl('/consultar/utilidades');
         //*/
         if (!this.sesionActiva) {
           this.route.navigateByUrl('/');

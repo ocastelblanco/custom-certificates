@@ -133,7 +133,7 @@ export class NotificarComponent implements OnInit {
             fin: new Date(new Date(fila.enroltimestart3).getTime() + (parseInt(fila.enrolperiod3) * dia)).toLocaleDateString('co-ES', dateOp),
           });
         }
-        fila.cursos.forEach((curso: any) => {
+        fila.cursos.filter((c: any) => c.curso).forEach((curso: any) => {
           this.data.push({
             nombre: fila.firstname + ' ' + fila.lastname,
             email: fila.email,
