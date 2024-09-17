@@ -150,5 +150,16 @@
     "claves": [
       "semilla"
     ]
+  },
+  {
+    "id": "24",
+    "corto": "EM_diplomado_calidad",
+    "comun": "Diplomado Calidad",
+    "largo": "Diplomado Aseguramiento de la Calidad Analítica con Enfoque de Riesgo",
+    "intensidad": "40",
+    "plazo": "31",
+    "claves": [
+      "diplomado"
+    ]
   }
 ]
