@@ -161,5 +161,18 @@
     "claves": [
       "diplomado"
     ]
+  },
+  {
+    "id": "25",
+    "corto": "EM_poct_villao",
+    "comun": "POCT Villavicencio",
+    "largo": "MODULO - CAPACITACIÓN POCT VILLAVICENCIO",
+    "intensidad": "40",
+    "plazo": "31",
+    "claves": [
+      "poct",
+      "villavicencio",
+      "villao"
+    ]
   }
 ]
