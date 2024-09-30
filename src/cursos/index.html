@@ -125,24 +125,27 @@
       </div>
     </div>
     `;
-    const ses = 'ses.php';//'https://aulavirtual.acgcalidad.co/login/ses.php';
-    const dataJSON = '../data/cursos.json';//'https://aulavirtual.acgcalidad.co/certificados/assets/data/cursos.json';
-    const save = 'cursos.php';
-    fetch(ses)
-      .then(resp => {
-        resp.json().then(data => {
-          if (data.admin) {
-            fetch(dataJSON)
-              .then(resp => {
-                resp.json().then(cursos => {
-                  cursosJSON = cursos;
-                  clavesJSON = Object.keys(cursosJSON[0]);
-                  renderiza();
+    const ses = 'https://aulavirtual.acgcalidad.co/login/ses.php';
+    const dataJSON = 'https://aulavirtual.acgcalidad.co/certificados/assets/data/cursos.json';
+    const save = 'https://aulavirtual.acgcalidad.co/certificados/cursos/cursos.php?url=' + encodeURI(dataJSON);
+    carga();
+    function carga() {
+      fetch(ses)
+        .then(resp => {
+          resp.json().then(data => {
+            if (data.admin) {
+              fetch(dataJSON)
+                .then(resp => {
+                  resp.json().then(cursos => {
+                    cursosJSON = cursos;
+                    clavesJSON = Object.keys(cursosJSON[0]);
+                    renderiza();
+                  });
                 });
-              });
-          }
+            }
+          });
         });
-      });
+    }
     function renderiza() {
       const cursosCard = [];
       const card = `
@@ -185,9 +188,18 @@
       });
     }
     function cambio(num, campo, idTxt) {
-      cursosJSON[num][campo] = document.getElementById(idTxt).value;
+      const val = document.getElementById(idTxt).value;
+      cursosJSON[num][campo] = (campo == 'claves') ? val.split(',') : val;
     }
     function guardar() {
+      divCursos.innerHTML = `
+      <div class="d-flex flex-row gap-2 justify-content-center align-items-center w-100" style="height:calc(100vh - 72px)">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Guardando...</span>
+        </div>
+        <div>Guardando datos</div>
+      </div>
+      `;
       fetch(save, {
         method: 'POST',
         body: JSON.stringify(cursosJSON),
@@ -202,12 +214,12 @@
             const modalResp = new bootstrap.Modal(document.getElementById('guardado-modal'));
             document.getElementById('guardado-resp').innerHTML =
               data.error ?
-                'Ha ocurrido un error al guardar la información. Intente nuevamente o contacte al administrador.' :
+                'Ha ocurrido un error al guardar la información: <em>' + data.error + '</em>. Intente nuevamente o contacte al administrador.' :
                 'Se ha guardado la información exitosamente.';
+            carga();
             modalResp.show();
           });
         });
-      renderiza();
     }
     function eliminar(id) {
       const modalElim = new bootstrap.Modal(document.getElementById('modal-confirmacion-eliminacion'));
