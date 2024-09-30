@@ -15,70 +15,224 @@
         crossorigin="anonymous">
   <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <style lang="css">
+    body {
+      margin: 0;
+    }
+
+    .topbar {
+      width: 100vw;
+      height: 56px;
+      padding: 0 32px;
+    }
+
+    #cursos {
+      margin-top: 72px;
+    }
+  </style>
 </head>
 
 <body>
+  <div
+       class="topbar bg-primary-subtle border-secondary position-fixed z-3 top-0 start-0 d-flex justify-content-end align-items-center gap-3">
+    <button type="button"
+            class="btn btn-success"
+            onclick="guardar()">
+      <i class="bi bi-floppy"></i>
+      <span>Guardar</span>
+    </button>
+    <button type="button"
+            onclick="nuevo()"
+            class="btn btn-primary">
+      <i class="bi bi-plus"></i>
+      <span>Añadir curso</span>
+    </button>
+  </div>
   <div id="cursos"
        class="container pb-4"></div>
-  <button type="button"
-          onclick="nuevo()"
-          class="btn btn-primary position-fixed"
-          style="top:56px;right:56px">
-    <i class="bi bi-plus-circle"></i>
-  </button>
+  <!-- MODALES -->
+  <div class="modal"
+       id="modal-confirmacion-eliminacion"
+       tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Eliminación de curso del listado</h5>
+          <button type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>
+            ¿Está seguro de eliminar el curso
+            <strong><span id="nombre-curso-eliminar"></span></strong>
+            del listado?
+          </p>
+          <p>Esta acción elimina el curso del listado para los certificados, NO LO ELIMINA DE MOODLE.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal">
+            <i class="bi bi-x"></i>
+            Cancelar
+          </button>
+          <button type="button"
+                  onclick="confirmaEliminacion()"
+                  data-bs-dismiss="modal"
+                  class="btn btn-danger">
+            <i class="bi bi-trash"></i>
+            Eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal"
+       id="guardado-modal"
+       tabindex="-1">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Guardado de cursos</h5>
+          <button type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p id="guardado-resp"></p>
+        </div>
+      </div>
+    </div>
+  </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
           integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
           crossorigin="anonymous"></script>
   <script>
+    let idEliminar = null;
+    let cursosJSON = [];
+    let clavesJSON = [];
     const divCursos = document.getElementById('cursos');
     const cardTemp = `
-    <div class="card mt-3 text-bg-light">
+    <div class="card mt-3 text-bg-light curso">
       <div class="card-body">
         {campos}
       </div>
-      <div class="d-flex justify-content-around my-3">
-        <button type="button" class="btn btn-primary" onclick="editar({id})">Editar</button>
-        <button type="button" class="btn btn-danger" onclick="eliminar({id})">Eliminar</button>
+      <div class="d-flex justify-content-end my-3 pe-3">
+        <button type="button" class="btn btn-danger" onclick="eliminar({id})"><i class="bi bi-trash"></i> Eliminar</button>
       </div>
     </div>
     `;
-    fetch('https://aulavirtual.acgcalidad.co/login/ses.php')
+    const ses = 'ses.php';//'https://aulavirtual.acgcalidad.co/login/ses.php';
+    const dataJSON = '../data/cursos.json';//'https://aulavirtual.acgcalidad.co/certificados/assets/data/cursos.json';
+    const save = 'cursos.php';
+    fetch(ses)
       .then(resp => {
         resp.json().then(data => {
           if (data.admin) {
-            fetch('https://aulavirtual.acgcalidad.co/certificados/assets/data/cursos.json')
+            fetch(dataJSON)
               .then(resp => {
                 resp.json().then(cursos => {
-                  const cursosCard = [];
-                  cursos.forEach((curso, numCurso) => {
-                    const card = `
-                    <div class="row py-2">
-                      <div class="col-2">
-                        <label for="{key}">{key}</label>
-                      </div>
-                      <div class="col-10">
-                        <input type="text" class="form-control" name="{key}" value="{value}">
-                      </div>
-                    </div>
-                    `;
-                    const cards = [];
-                    Object.keys(curso).forEach(key => cards.push(card.replaceAll('{key}', key).replaceAll('{value}', curso[key])));
-                    cursosCard.push(cardTemp.replaceAll('{campos}', cards.join('\n')).replaceAll('{id}', curso['id']));
-                  });
-                  divCursos.innerHTML = cursosCard.join('\n');
+                  cursosJSON = cursos;
+                  clavesJSON = Object.keys(cursosJSON[0]);
+                  renderiza();
                 });
               });
           }
         });
       });
+    function renderiza() {
+      const cursosCard = [];
+      const card = `
+      <div class="row py-2">
+        <div class="col-2">
+          <label for="{key}-{num}">{key}</label>
+        </div>
+        <div class="col-10">
+          <input type="text"
+                 onchange="cambio('{num}', '{key}', '{key}-{num}')"
+                 class="form-control"
+                 id="{key}-{num}"
+                 name="{key}-{num}"
+                 value="{value}">
+        </div>
+      </div>
+      `;
+      cursosJSON.forEach((curso, num) => {
+        const cards = [];
+        clavesJSON.forEach(key => cards.push(
+          card.replaceAll('{key}', key)
+            .replaceAll('{value}', curso[key])
+            .replaceAll('{num}', num)
+            .replaceAll('{id}', curso.id)
+        ));
+        cursosCard.push(cardTemp.replaceAll('{campos}', cards.join('\n')).replaceAll('{id}', curso['id']));
+      });
+      divCursos.innerHTML = cursosCard.join('\n');
+    }
     function nuevo() {
       console.log('Crear un nuevo curso');
+      const nuevoCurso = {};
+      clavesJSON.forEach(key => nuevoCurso[key] = "");
+      cursosJSON.push(nuevoCurso);
+      renderiza();
+      window.scrollTo({
+        top: ultimoCurso(),
+        left: 0,
+        behavior: "smooth",
+      });
     }
-    function editar(id) {
-      console.log('Editar el curso ' + id);
+    function cambio(num, campo, idTxt) {
+      cursosJSON[num][campo] = document.getElementById(idTxt).value;
+    }
+    function guardar() {
+      fetch(save, {
+        method: 'POST',
+        body: JSON.stringify(cursosJSON),
+        headers: {
+          "Content-Type": "application/json"
+        },
+        mode: "same-origin",
+        credentials: "same-origin",
+      })
+        .then(resp => {
+          resp.json().then(data => {
+            const modalResp = new bootstrap.Modal(document.getElementById('guardado-modal'));
+            document.getElementById('guardado-resp').innerHTML =
+              data.error ?
+                'Ha ocurrido un error al guardar la información. Intente nuevamente o contacte al administrador.' :
+                'Se ha guardado la información exitosamente.';
+            modalResp.show();
+          });
+        });
+      renderiza();
     }
     function eliminar(id) {
-      console.log('Eliminar el curso ' + id);
+      const modalElim = new bootstrap.Modal(document.getElementById('modal-confirmacion-eliminacion'));
+      modalElim.show();
+      idEliminar = id;
+      document.getElementById('nombre-curso-eliminar').innerHTML = cursosJSON.find((curso) => curso.id == id)['comun'];
+    }
+    function confirmaEliminacion() {
+      const pos = cursosJSON.findIndex((curso) => curso.id == idEliminar);
+      cursosJSON.splice(pos, 1);
+      renderiza();
+    }
+    function ultimoCurso() {
+      const num = document.getElementsByClassName('curso').length;
+      const ultimo = document.getElementsByClassName('curso')[num - 1];
+      const txtInp = ultimo.getElementsByTagName('input')[0];
+      const pos = ultimo.getBoundingClientRect();
+      txtInp.focus();
+      ultimo.classList.remove('text-bg-light');
+      ultimo.classList.add('text-bg-primary');
+      setTimeout(() => {
+        ultimo.classList.remove('text-bg-primary');
+        ultimo.classList.add('text-bg-light');
+      }, 2500);
+      return pos.top;
     }
   </script>
 </body>
