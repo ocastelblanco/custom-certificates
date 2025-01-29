@@ -28,6 +28,16 @@ $resultado = $database->select(
   $where_id
 );
 foreach ($resultado as $num => $res) {
-  $resultado[$num]["coursename"] = $nombresCursos[$res["shortname"]];
+  if ($res["shortname"] == "") {
+    /*
+    print "<p>";
+    foreach ($res as $key => $value) {
+      print "<br>$key: $value";
+    }
+    print "</p>";
+    //*/
+  } else {
+    $resultado[$num]["coursename"] = $nombresCursos[$res["shortname"]];
+  }
 }
 print_r(json_encode($resultado));
