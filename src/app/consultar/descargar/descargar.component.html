@@ -4,6 +4,10 @@
     <clr-spinner clrInverse>Cargando datos...</clr-spinner>
   </div>
   <div class="content-area">
+    <div class="trick"
+         style="display: none;">
+      <button (click)="creaPdfPrueba()">Descargar prueba</button>
+    </div>
     <clr-alert *ngIf="errorToken && sesion.perfil && sesion.perfil.admin"
                [clrAlertType]="'danger'">
       <clr-alert-item>

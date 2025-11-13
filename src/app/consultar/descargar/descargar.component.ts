@@ -71,6 +71,27 @@ export class DescargarComponent implements OnInit {
     }
     return salida;
   }
+  creaPdfPrueba(): void {
+    this.certSel = [{
+      id: '123456',
+      userid: 'oliver',
+      courseid: '23',
+      intensidad: '80',
+      fecha: '1677628800',
+      notificacion: 'si',
+      firstname: 'Oliver',
+      lastname: 'Castelblanco',
+      idnumber: '79708009',
+      institution: 'Le Tiende',
+      city: 'Bogotá',
+      country: 'CO',
+      fullname: 'Curso de Prueba de Generación de Certificados',
+      shortname: 'curso_prueba_certificados',
+      coursename: 'Curso',
+      email: 'mi@gmail.com'
+    }];
+    this.crearPdf();
+  }
   crearPdf() {
     this.abreModal = true;
     const zip: JSZip = new JSZip();

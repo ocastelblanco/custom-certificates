@@ -121,6 +121,9 @@ export class ApiService {
     const get: string = id ? '?id=' + id : '';
     return this.http.get(environment.ruta_api + 'assets/api/getCert.php' + get, { responseType: 'json' });
   }
+  getBaseCert(): Observable<any> {
+    return this.http.get<any>('assets/img/base_cert.json', { responseType: 'json' });
+  }
   listUsers(id: string | null = null): Observable<any> {
     const get: string = id ? '?id=' + id : '';
     return this.http.get(environment.ruta_api + 'assets/api/listUsers.php' + get, { responseType: 'json' });

@@ -3,8 +3,8 @@
   "version": "0.1.1",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build --baseHref=/certificados/ --configuration production --aot=true --build-optimizer --vendor-chunk",
+    "start": "export NODE_OPTIONS=--openssl-legacy-provider && ng serve",
+    "build": "NODE_OPTIONS=--openssl-legacy-provider &&ng build --baseHref=/certificados/ --configuration production --aot=true --build-optimizer --vendor-chunk",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
