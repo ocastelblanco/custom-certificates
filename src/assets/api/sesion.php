@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: application/json');
 if (isset($_GET["logout"])) {
   if (session_id()) {
     session_destroy();

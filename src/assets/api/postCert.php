@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: application/json');
 require("../config/config.php");
 $last_id = $database->query("SELECT max(id) FROM " . $tablas["cert"])->fetchAll()[0][0];
 $certid = $last_id + 1;

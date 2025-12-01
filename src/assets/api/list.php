@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: application/json');
 require("../config/config.php");
 $id = $_GET["id"];
 $salida = $database->select(

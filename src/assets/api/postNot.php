@@ -6,5 +6,6 @@ if (isset($_GET["id"])) {
   ], [
     "id" => $_GET["id"]
   ]);
+  header('Content-Type: application/json');
   print_r(json_encode(array("id" => $_GET["id"])));
 }

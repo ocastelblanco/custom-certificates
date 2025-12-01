@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: application/json');
 // Envía notificaciones sobre GENERACIÓN DE CERTIFICADOS
 require('../config/config.php');
 require('../lib/vendor/autoload.php');

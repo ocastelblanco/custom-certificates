@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: application/json');
 require("../config/config.php");
 $nombres = array("userid", "nombres", "apellidos", "email", "identificacion", "fullname", "shortname", "courseid", "notaFinal", "fecha");
 $query = "SELECT u.id " . $nombres[0] . ", ";
@@ -30,14 +31,15 @@ foreach ($resultado as $num => $res) {
   $resultado[$num]["coursename"] = $nombresCursos[$res["shortname"]];
 }
 // Se obtiene el listado de Certificados ya generados
-$cert = $database->select($tablas["cert"], ["id", "userid", "courseid"]);
+$cert = $database->select($tablas["cert"], ["id", "userid", "courseid", "fecha"]);
 $salida = array();
 // Se genera un listado final donde SOLO están los participantes sin certificado en un curso dado.
 foreach ($resultado as $el) {
   $coinc = false;
   foreach ($cert as $ce) {
-    if ($el["userid"] === $ce["userid"] && $el["courseid"] === $ce["courseid"]) $coinc = true;
+    $fechaCert = date('Y-m-d H:i:s', $ce["fecha"]);
+    if ($el["userid"] === $ce["userid"] && $el["courseid"] === $ce["courseid"] && $el["fecha"] === $fechaCert) $coinc = true;
   }
   !$coinc ? array_push($salida, $el) : null;
 }
-print_r(json_encode($salida));
+print(json_encode($salida));

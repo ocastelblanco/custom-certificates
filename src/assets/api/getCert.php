@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: application/json');
 require("../config/config.php");
 $where_id = array("userid[>]" => 0);
 if (isset($_GET["id"])) $where_id = array("userid" => $_GET["id"]);
